@@ -4,7 +4,7 @@ import dev.client.event.classes.AttackEvent;
 import dev.client.event.interfaces.IAttackable;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.FloatSetting;
 import dev.client.modules.settings.impl.ModeSetting;
 import dev.client.util.other.SoundUtil;
@@ -17,7 +17,7 @@ public class HitSound extends Module implements IAttackable {
    private final ModeSetting mode = new ModeSetting().name("Mode").value("Type1").modes("Type1", "Type2", "Type3", "Type4", "Type5", "Type6", "Type7");
 
    public HitSound() {
-      super(new PlayerModel("HitSound", Category.COMBAT, "Проигрывает звук при ударе по противнику"));
+      super(new ModuleBranding("HitSound", Category.COMBAT, "Проигрывает звук при ударе по противнику"));
       this.addSetting(this.value, this.mode);
    }
 

@@ -5,7 +5,7 @@ import dev.client.event.interfaces.ITickable;
 import dev.client.mixins.other.ILivingEntityMixin;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.util.IUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -13,7 +13,7 @@ import net.fabricmc.api.Environment;
 @Environment(EnvType.CLIENT)
 public class NoJumpDelay extends Module implements ITickable, IUtil {
    public NoJumpDelay() {
-      super(new PlayerModel("NoJumpDelay", Category.MOVEMENT, "Спаммит прыжками в низком пространстве"));
+      super(new ModuleBranding("NoJumpDelay", Category.MOVEMENT, "Спаммит прыжками в низком пространстве"));
    }
 
    public void onTick(TickEvent event) {

@@ -4,7 +4,7 @@ import dev.client.event.classes.TickEvent;
 import dev.client.event.interfaces.ITickable;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.FloatSetting;
 import dev.client.util.IUtil;
 import net.fabricmc.api.EnvType;
@@ -23,7 +23,7 @@ public class OpenWall extends Module implements ITickable, IUtil {
    private final FloatSetting range = new FloatSetting().name("Range").value(6.0F).minValue(1.0F).maxValue(10.0F).incriment(0.5F);
 
    public OpenWall() {
-      super(new PlayerModel("OpenWall", Category.PLAYER, "Позволяет взаимодействовать с интерактивными блоками через стены"));
+      super(new ModuleBranding("OpenWall", Category.PLAYER, "Позволяет взаимодействовать с интерактивными блоками через стены"));
       this.addSetting(this.range);
    }
 

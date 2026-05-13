@@ -8,7 +8,7 @@ import dev.client.event.interfaces.IRenderable3D;
 import dev.client.managers.FontManager;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.BooleanSetting;
 import dev.client.modules.settings.impl.ColorSetting;
 import dev.client.modules.settings.impl.ModeSetting;
@@ -68,7 +68,7 @@ public class PlayerEsp extends Module implements IRenderable3D, IUtil, IRenderab
    public final ColorSetting color = new ColorSetting().name("Color").color(new Color(255, 255, 255, 255));
 
    public PlayerEsp() {
-      super(new PlayerModel("Esp", Category.RENDER, "Показывает информацию о противниках в мире"));
+      super(new ModuleBranding("Esp", Category.RENDER, "Показывает информацию о противниках в мире"));
       this.addSetting(this.options, this.chamsMode, this.nametagOptions, this.color);
    }
 

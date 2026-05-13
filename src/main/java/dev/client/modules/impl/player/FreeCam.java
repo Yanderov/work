@@ -14,7 +14,7 @@ import dev.client.modules.Category;
 import dev.client.modules.IDisableable;
 import dev.client.modules.IEnableable;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.BooleanSetting;
 import dev.client.modules.settings.impl.FloatSetting;
 import dev.client.util.IUtil;
@@ -46,7 +46,7 @@ public class FreeCam extends Module implements IUtil, IRenderable2D, ISendPacket
    private final FloatSetting speed = new FloatSetting().name("Speed").value(8.0F).minValue(0.5F).maxValue(20.0F).incriment(0.5F);
 
    public FreeCam() {
-      super(new PlayerModel("FreeCam", Category.PLAYER, "Позволяет отделить камеру от игрока"));
+      super(new ModuleBranding("FreeCam", Category.PLAYER, "Позволяет отделить камеру от игрока"));
       this.addSetting(this.freeze, this.speed);
    }
 

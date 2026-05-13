@@ -7,7 +7,6 @@ import dev.client.event.classes.MoveCorrectionEvent;
 import dev.client.event.classes.MoveOrEvent;
 import dev.client.event.classes.PostMoveEvent;
 import dev.client.modules.impl.player.NoPush;
-import dev.client.modules.impl.render.CustomModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -19,6 +18,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
@@ -86,19 +86,6 @@ public abstract class EntityMixin {
       BoundingBoxControlEvent event = new BoundingBoxControlEvent(this.boundingBox, (Entity)(Object)this);
       WildClient.INSTANCE.getEventManager().hookEvent(event);
       cir.setReturnValue(event.getBox());
-   }
-
-   @Inject(
-      method = {"pushAwayFrom"},
-      at = {@At("HEAD")},
-      cancellable = true
-   )
-   private void pushAwayFrom(Entity entity, CallbackInfo ci) {
-      CustomModel customModel = (CustomModel)WildClient.INSTANCE.getModuleManager().getByClass(CustomModel.class);
-      if (customModel.isEnabled() && customModel.getCustomModel() == entity) {
-         ci.cancel();
-      }
-
    }
 
    @ModifyArgs(
@@ -181,6 +168,7 @@ public abstract class EntityMixin {
       }
    }
 
+   @Unique
    private static boolean isNearlyEqual(double a, double b) {
       return Math.abs(a - b) < 1.0E-5;
    }

@@ -4,7 +4,7 @@ import dev.client.event.classes.ReceivePacketEvent;
 import dev.client.event.interfaces.IReceivePacketable;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.BooleanSetting;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -21,7 +21,7 @@ public class BetterChat extends Module implements IReceivePacketable {
    private static final MinecraftClient mc = MinecraftClient.getInstance();
 
    public BetterChat() {
-      super(new PlayerModel("BetterChat", Category.UTIL, "Запоминает историю чата и убирает повторные сообщения"));
+      super(new ModuleBranding("BetterChat", Category.UTIL, "Запоминает историю чата и убирает повторные сообщения"));
       this.addSetting(this.antiSpam);
    }
 

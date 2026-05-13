@@ -6,7 +6,7 @@ import dev.client.event.interfaces.ITickable;
 import dev.client.mixins.other.IVec3dMixin;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.util.IUtil;
 import java.util.function.Predicate;
 import net.fabricmc.api.EnvType;
@@ -19,7 +19,7 @@ import net.minecraft.util.math.Box;
 @Environment(EnvType.CLIENT)
 public class NoWeb extends Module implements ITickable, IUtil {
    public NoWeb() {
-      super(new PlayerModel("NoWeb", Category.MOVEMENT, "Не дает зайти игроку в паутину"));
+      super(new ModuleBranding("NoWeb", Category.MOVEMENT, "Не дает зайти игроку в паутину"));
    }
 
    public void onTick(TickEvent event) {

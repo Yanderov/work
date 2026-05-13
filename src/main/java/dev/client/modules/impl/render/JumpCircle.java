@@ -10,8 +10,9 @@ import dev.client.event.interfaces.IRenderable3D;
 import dev.client.event.interfaces.ITickable;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.BooleanSetting;
+import dev.client.modules.settings.impl.ColorSetting;
 import dev.client.modules.settings.impl.FloatSetting;
 import dev.client.modules.settings.impl.ModeSetting;
 import dev.client.modules.settings.impl.MultiBoxSetting;
@@ -19,6 +20,7 @@ import dev.client.util.IUtil;
 import dev.client.util.animations.Animation;
 import dev.client.util.animations.Direction;
 import dev.client.util.animations.impl.EaseBackIn;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -47,6 +49,7 @@ public class JumpCircle extends Module implements IRenderable3D, ITickable, IUti
    private final FloatSetting time = new FloatSetting().name("Time").value(1000.0F).minValue(200.0F).maxValue(2000.0F).incriment(100.0F);
    private final FloatSetting animSpeed = new FloatSetting().name("Anim").value(500.0F).minValue(100.0F).maxValue(1000.0F).incriment(50.0F);
    private final MultiBoxSetting animations = new MultiBoxSetting().name("Animations").booleanSettings(new BooleanSetting().name("Size").value(true), new BooleanSetting().name("Alpha").value(true));
+   private final ColorSetting color = new ColorSetting().name("Color").color(new Color(255, 255, 255, 255));
    private final FloatSetting animValue = new FloatSetting() {
       public boolean isVisible() {
          return JumpCircle.this.animations.getValueByName("Size");
@@ -111,13 +114,13 @@ public class JumpCircle extends Module implements IRenderable3D, ITickable, IUti
    private int transparentColor;
 
    public JumpCircle() {
-      super(new PlayerModel("JumpCircle", Category.RENDER, "Рисует под игроком круг при прыжке и приземлении"));
+      super(new ModuleBranding("JumpCircle", Category.RENDER, "Рисует под игроком круг при прыжке и приземлении"));
       this.orbitCos0 = new float[ORBIT_DOT_COUNTS[0]];
       this.orbitSin0 = new float[ORBIT_DOT_COUNTS[0]];
       this.orbitCos1 = new float[ORBIT_DOT_COUNTS[1]];
       this.orbitSin1 = new float[ORBIT_DOT_COUNTS[1]];
       this.arcStartA = new double[6];
-      this.addSetting(this.mode, this.radius, this.time, this.animSpeed, this.animations, this.animValue);
+      this.addSetting(this.mode, this.radius, this.time, this.animSpeed, this.animations, this.color, this.animValue);
    }
 
    public void onRender3D(Render3DEvent event) {
@@ -128,7 +131,7 @@ public class JumpCircle extends Module implements IRenderable3D, ITickable, IUti
          RenderSystem.enableDepthTest();
          RenderSystem.depthMask(false);
          RenderSystem.blendFuncSeparate(SrcFactor.SRC_ALPHA, DstFactor.ONE, SrcFactor.ONE, DstFactor.ZERO);
-         this.cachedThemeRGB = WildClient.INSTANCE.getThemeManager().getTheme().color().getRGB();
+         this.cachedThemeRGB = this.color.getColor().getRGB();
          this.transparentColor = this.cachedThemeRGB & 16777215;
          Vec3d cp = mc.getEntityRenderDispatcher().camera.getPos();
          double camX = cp.x;

@@ -5,7 +5,7 @@ import dev.client.event.interfaces.ITickable;
 import dev.client.mixins.other.IMinecraftClientMixin;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.util.IUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -13,7 +13,7 @@ import net.fabricmc.api.Environment;
 @Environment(EnvType.CLIENT)
 public class TapeMouse extends Module implements ITickable, IUtil {
    public TapeMouse() {
-      super(new PlayerModel("TapeMouse", Category.COMBAT, "Бьет с учетом кулдауна оружия"));
+      super(new ModuleBranding("TapeMouse", Category.COMBAT, "Бьет с учетом кулдауна оружия"));
    }
 
    public void onTick(TickEvent event) {

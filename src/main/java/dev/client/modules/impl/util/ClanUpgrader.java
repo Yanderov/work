@@ -5,7 +5,7 @@ import dev.client.event.interfaces.ITickable;
 import dev.client.modules.Category;
 import dev.client.modules.IDisableable;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.BooleanSetting;
 import dev.client.modules.settings.impl.MultiBoxSetting;
 import dev.client.util.IUtil;
@@ -23,7 +23,7 @@ public class ClanUpgrader extends Module implements ITickable, IUtil, IDisableab
    private final TimerUtil timerUtil = new TimerUtil();
 
    public ClanUpgrader() {
-      super(new PlayerModel("ClanUpgrader", Category.UTIL, "Автоматически прокачивает уровень клана"));
+      super(new ModuleBranding("ClanUpgrader", Category.UTIL, "Автоматически прокачивает уровень клана"));
       this.addSetting(this.options);
    }
 

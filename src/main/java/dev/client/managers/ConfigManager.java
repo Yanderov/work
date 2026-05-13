@@ -80,7 +80,7 @@ public class ConfigManager {
    }
 
    public void save(Module module) {
-      String name = module.getPlayerModel().name();
+      String name = module.getModuleBranding().name();
       this.writeJson(this.configDir.resolve(this.sanitize(name) + ".json"), this.buildModuleJson(module));
    }
 
@@ -127,7 +127,7 @@ public class ConfigManager {
    }
 
    public void load(Module module) {
-      String name = module.getPlayerModel().name();
+      String name = module.getModuleBranding().name();
       Path file = this.configDir.resolve(this.sanitize(name) + ".json");
       if (Files.exists(file, new LinkOption[0])) {
          try (Reader reader = new InputStreamReader(Files.newInputStream(file), StandardCharsets.UTF_8)) {
@@ -179,7 +179,7 @@ public class ConfigManager {
       JsonObject root = new JsonObject();
 
       for(Module module : this.moduleManager.getModules()) {
-         root.add(module.getPlayerModel().name(), this.buildModuleJson(module));
+         root.add(module.getModuleBranding().name(), this.buildModuleJson(module));
       }
 
       this.writeJson(this.profilesDir.resolve(this.sanitize(configName) + ".json"), root);
@@ -197,7 +197,7 @@ public class ConfigManager {
             JsonObject root = JsonParser.parseReader(reader).getAsJsonObject();
 
             for(Module module : this.moduleManager.getModules()) {
-               String mName = module.getPlayerModel().name();
+               String mName = module.getModuleBranding().name();
                if (root.has(mName)) {
                   this.applyModuleJson(module, root.getAsJsonObject(mName));
                }

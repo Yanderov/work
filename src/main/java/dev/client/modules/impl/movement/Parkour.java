@@ -4,7 +4,7 @@ import dev.client.event.classes.Render3DEvent;
 import dev.client.event.interfaces.IRenderable3D;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.util.IUtil;
 import dev.client.util.math.TimerUtil;
 import net.fabricmc.api.EnvType;
@@ -15,7 +15,7 @@ public class Parkour extends Module implements IRenderable3D, IUtil {
    private final TimerUtil timerUtil = new TimerUtil();
 
    public Parkour() {
-      super(new PlayerModel("Parkour", Category.MOVEMENT, "Прыгает на конце блока"));
+      super(new ModuleBranding("Parkour", Category.MOVEMENT, "Прыгает на конце блока"));
    }
 
    public void onRender3D(Render3DEvent event) {

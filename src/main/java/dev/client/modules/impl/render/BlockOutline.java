@@ -6,7 +6,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import dev.client.WildClient;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.BooleanSetting;
 import dev.client.modules.settings.impl.ColorSetting;
 import dev.client.util.IUtil;
@@ -36,7 +36,7 @@ public class BlockOutline extends Module implements IUtil {
    private final ColorSetting color = new ColorSetting().name("Color").color(new Color(255, 255, 255, 255));
 
    public BlockOutline() {
-      super(new PlayerModel("BlockOutline", Category.RENDER, "Изменяет очертание выбранного блока"));
+      super(new ModuleBranding("BlockOutline", Category.RENDER, "Изменяет очертание выбранного блока"));
       this.addSetting(this.fill, this.color);
    }
 

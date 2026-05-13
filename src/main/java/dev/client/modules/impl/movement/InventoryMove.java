@@ -9,7 +9,7 @@ import dev.client.event.interfaces.ITickable;
 import dev.client.modules.Category;
 import dev.client.modules.IEnableable;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.ui.gui.Gui;
 import dev.client.util.IUtil;
 import net.fabricmc.api.EnvType;
@@ -25,7 +25,7 @@ public class InventoryMove extends Module implements ITickable, IClickSlotable, 
    private KeyBinding[] pressedKeys;
 
    public InventoryMove() {
-      super(new PlayerModel("InventoryMove", Category.MOVEMENT, "Позволяет ходить в гуи и инвентаре"));
+      super(new ModuleBranding("InventoryMove", Category.MOVEMENT, "Позволяет ходить в гуи и инвентаре"));
    }
 
    public void onClickSlot(ClickSlotEvent event) {

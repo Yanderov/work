@@ -6,7 +6,7 @@ import dev.client.event.interfaces.IBreakable;
 import dev.client.event.interfaces.ITickable;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.util.IUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -25,7 +25,7 @@ public class AutoTool extends Module implements ITickable, IBreakable, IUtil {
    private boolean change = false;
 
    public AutoTool() {
-      super(new PlayerModel("AutoTool", Category.UTIL, "Берет в руку нужный инструмент при ломании блока"));
+      super(new ModuleBranding("AutoTool", Category.UTIL, "Берет в руку нужный инструмент при ломании блока"));
    }
 
    public void onTick(TickEvent event) {

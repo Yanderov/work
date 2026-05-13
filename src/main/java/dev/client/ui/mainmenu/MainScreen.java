@@ -106,16 +106,13 @@ public class MainScreen extends Screen {
       
       Builder.rectangle().size(new SizeState((float)width, (float)height)).color(new QuadColorState(new Color(0, 0, 0, 180))).radius(new QuadRadiusState(5.0F)).smoothness(1.15F).build().render(matrix, x, y);
       
-      AbstractTexture avatarTex = MinecraftClient.getInstance().getTextureManager().getTexture(Identifier.of("wild", "images/gui/music_avatar.png"));
-      Builder.texture().size(new SizeState(28.0F, 28.0F)).radius(new QuadRadiusState(14.0F)).texture(0.0F, 0.0F, 1.0F, 1.0F, avatarTex).color(new QuadColorState(Color.WHITE)).build().render(matrix, x + 8.0D, y + 8.0D);
-
       String track = WildClient.INSTANCE.getMusicManager().getCurrentTrackName();
       
-      Builder.text().font(FontManager.SUISSEINTMEDIUM.get()).text("Yanderov Music").color(Color.WHITE).size(7.0F).thickness(0.05F).build().render(matrix, x + 40.0D, y + 8.0D);
+      Builder.text().font(FontManager.SUISSEINTMEDIUM.get()).text("Yanderov Music").color(Color.WHITE).size(7.0F).thickness(0.05F).build().render(matrix, x + 8.0D, y + 8.0D);
       
-      double trackX = x + 40.0D;
+      double trackX = x + 8.0D;
       double trackY = y + 18.0D;
-      double trackWidth = 125.0D;
+      double trackWidth = 155.0D;
       
       Scissor.StartScissor((float)trackX, (float)trackY, (float)trackWidth, 10.0F);
       float fullTrackWidth = FontManager.SUISSEINTREGULAR.get().getWidth(track, 6.0F);
@@ -134,20 +131,19 @@ public class MainScreen extends Screen {
       Scissor.stopScissor();
       
       float progress = WildClient.INSTANCE.getMusicManager().getProgress();
-      double barX = x + 40.0D;
+      double barX = x + 8.0D;
       double barY = y + 35.0D;
-      double barWidth = 120.0D;
+      double barWidth = 155.0D;
       
       for (int i = 0; i < (int)barWidth; i++) {
           double waveOffset = Math.sin((double)(i + System.currentTimeMillis() / 20.0D) * 0.1D) * 2.5D;
-          // Use solid white for played part, and semi-transparent for unplayed, but with more thickness
           if (i < barWidth * progress) {
               Builder.rectangle().size(new SizeState(3.0F, 3.0F)).color(new QuadColorState(Color.WHITE)).radius(new QuadRadiusState(1.5F)).build().render(matrix, barX + i, barY + waveOffset);
           } else {
               Builder.rectangle().size(new SizeState(3.0F, 3.0F)).color(new QuadColorState(new Color(255, 255, 255, 60))).radius(new QuadRadiusState(1.5F)).build().render(matrix, barX + i, barY + waveOffset);
           }
       }
-      // Dot thumb at the end of progress - even bigger and clearer
+      
       double thumbX = barX + (barWidth * progress);
       double thumbWaveOffset = Math.sin((double)(thumbX - barX + System.currentTimeMillis() / 20.0D) * 0.1D) * 2.5D;
       Builder.rectangle().size(new SizeState(10.0F, 10.0F)).color(new QuadColorState(Color.WHITE)).radius(new QuadRadiusState(5.0F)).build().render(matrix, thumbX - 5.0D, barY + thumbWaveOffset - 3.5D);
@@ -171,9 +167,9 @@ public class MainScreen extends Screen {
          double x = 10.0D;
          double y = (double)this.height - 80.0D;
          
-         double barX = x + 40.0D;
+         double barX = x + 8.0D;
          double barY = y + 35.0D;
-         double barWidth = 120.0D;
+         double barWidth = 155.0D;
          if (MouseUtil.isHovered(barX, barY - 5.0D, barWidth, 10.0D, mouseX, mouseY)) {
              float pct = (float)((mouseX - barX) / barWidth);
              WildClient.INSTANCE.getMusicManager().setPosition(Math.max(0, Math.min(1, pct)));

@@ -6,7 +6,7 @@ import dev.client.modules.Category;
 import dev.client.modules.IDisableable;
 import dev.client.modules.IEnableable;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.impl.player.NameProtect;
 import dev.client.util.IUtil;
 import java.util.UUID;
@@ -20,7 +20,7 @@ public class FakePlayer extends Module implements IDisableable, IEnableable, IUt
    private OtherClientPlayerEntity fakeModel;
 
    public FakePlayer() {
-      super(new PlayerModel("FakePlayer", Category.UTIL, "Создает противника, видного только игроку"));
+      super(new ModuleBranding("FakePlayer", Category.UTIL, "Создает противника, видного только игроку"));
    }
 
    public void onDisable() {

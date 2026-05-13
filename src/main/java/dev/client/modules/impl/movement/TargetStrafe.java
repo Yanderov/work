@@ -6,7 +6,7 @@ import dev.client.event.interfaces.ITickable;
 import dev.client.modules.Category;
 import dev.client.modules.IEnableable;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.impl.combat.Aura;
 import dev.client.modules.settings.impl.BooleanSetting;
 import dev.client.modules.settings.impl.FloatSetting;
@@ -30,7 +30,7 @@ public class TargetStrafe extends Module implements ITickable, IUtil, IEnableabl
    private Aura aura;
 
    public TargetStrafe() {
-      super(new PlayerModel("TargetStrafe", Category.MOVEMENT, "Преследует противника"));
+      super(new ModuleBranding("TargetStrafe", Category.MOVEMENT, "Преследует противника"));
       this.addSetting(this.distance, this.potionBoost, this.jump);
    }
 

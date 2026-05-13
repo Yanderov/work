@@ -6,7 +6,7 @@ import dev.client.modules.Category;
 import dev.client.modules.IDisableable;
 import dev.client.modules.IEnableable;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.util.IUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -21,7 +21,7 @@ public class GodMode extends Module implements IUtil, IEnableable, IDisableable,
    private long enableTime = 0L;
 
    public GodMode() {
-      super(new PlayerModel("GodMode", Category.PLAYER, "NoDesc"));
+      super(new ModuleBranding("GodMode", Category.PLAYER, "NoDesc"));
    }
 
    public void onEnable() {

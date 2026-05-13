@@ -4,7 +4,7 @@ import dev.client.event.classes.TickEvent;
 import dev.client.event.interfaces.ITickable;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.ModeSetting;
 import dev.client.util.animations.Animation;
 import dev.client.util.animations.Direction;
@@ -19,7 +19,7 @@ public class Wings extends Module implements ITickable {
    public static final Animation animationWings = new EaseBackIn(550, 0.5D, 0.001F);
 
    public Wings() {
-      super(new PlayerModel("Wings", Category.RENDER, "Добавляет игроку крылья за спиной"));
+      super(new ModuleBranding("Wings", Category.RENDER, "Добавляет игроку крылья за спиной"));
       this.addSetting(this.mode);
    }
 

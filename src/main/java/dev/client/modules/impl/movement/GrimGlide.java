@@ -4,7 +4,7 @@ import dev.client.event.classes.RotationEvent;
 import dev.client.event.interfaces.IRotateable;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.util.IUtil;
 import dev.client.util.math.TimerUtil;
 import java.util.concurrent.ThreadLocalRandom;
@@ -18,7 +18,7 @@ public class GrimGlide extends Module implements IUtil, IRotateable {
    int ticksTwo = 0;
 
    public GrimGlide() {
-      super(new PlayerModel("GrimGlide", Category.MOVEMENT, "NoDesc"));
+      super(new ModuleBranding("GrimGlide", Category.MOVEMENT, "NoDesc"));
    }
 
    public void onRotate(RotationEvent rotationEvent) {

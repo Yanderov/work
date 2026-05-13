@@ -5,7 +5,7 @@ import dev.client.event.classes.TickEvent;
 import dev.client.event.interfaces.ITickable;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.FloatSetting;
 import dev.client.util.IUtil;
 import net.fabricmc.api.EnvType;
@@ -17,7 +17,7 @@ public class AutoLeave extends Module implements ITickable, IUtil {
    private final FloatSetting distanceSetting = new FloatSetting().name("Distance").minValue(5.0F).maxValue(40.0F).incriment(1.0F).value(10.0F);
 
    public AutoLeave() {
-      super(new PlayerModel("AutoLeave", Category.UTIL, "Выходит с сервера при появлении противника рядом с игроком"));
+      super(new ModuleBranding("AutoLeave", Category.UTIL, "Выходит с сервера при появлении противника рядом с игроком"));
    }
 
    public void leave(Text text) {

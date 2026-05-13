@@ -3,7 +3,7 @@ package dev.client.modules.impl.render;
 import dev.client.WildClient;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.impl.combat.Aura;
 import dev.client.modules.settings.impl.BooleanSetting;
 import dev.client.modules.settings.impl.FloatSetting;
@@ -44,7 +44,7 @@ public class SwingAnimation extends Module implements IUtil {
    private float r = 0.0F;
 
    public SwingAnimation() {
-      super(new PlayerModel("SwingAnimation", Category.RENDER, "Изменяет положение рук и их анимацию"));
+      super(new ModuleBranding("SwingAnimation", Category.RENDER, "Изменяет положение рук и их анимацию"));
       this.addSetting(this.mode, this.slow, this.onlyaura, this.positionMainX, this.positionMainY, this.positionMainZ, this.positionOffX, this.positionOffY, this.positionOffZ);
    }
 

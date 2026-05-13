@@ -4,7 +4,7 @@ import dev.client.event.classes.TickEvent;
 import dev.client.event.interfaces.ITickable;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.BooleanSetting;
 import dev.client.modules.settings.impl.FloatSetting;
 import dev.client.modules.settings.impl.ModeSetting;
@@ -38,7 +38,7 @@ public class ChestStealer extends Module implements ITickable, IUtil {
    private final TimerUtil timerUtil = new TimerUtil();
 
    public ChestStealer() {
-      super(new PlayerModel("ChestStealer", Category.UTIL, "Забирает все предметы с сундука"));
+      super(new ModuleBranding("ChestStealer", Category.UTIL, "Забирает все предметы с сундука"));
       this.addSetting(this.mode, this.delay, this.items);
    }
 

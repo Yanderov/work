@@ -12,7 +12,7 @@ import dev.client.event.interfaces.ITickable;
 import dev.client.modules.Category;
 import dev.client.modules.IEnableable;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.BooleanSetting;
 import dev.client.util.IUtil;
 import dev.client.util.math.TimerUtil;
@@ -40,7 +40,7 @@ public class Strafe extends Module implements ITickable, IUtil, IEnableable, IPo
    private final StrafeMovement strafeMovement = new StrafeMovement();
 
    public Strafe() {
-      super(new PlayerModel("Strafe", Category.MOVEMENT, "Ускоряет изменение вектора движения игрока"));
+      super(new ModuleBranding("Strafe", Category.MOVEMENT, "Ускоряет изменение вектора движения игрока"));
       this.addSetting(this.potionBoost, this.damageBoost);
    }
 

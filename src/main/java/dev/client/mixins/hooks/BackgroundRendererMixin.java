@@ -31,7 +31,7 @@ public class BackgroundRendererMixin {
    private static void onApplyFog(Camera camera, BackgroundRenderer.FogType fogType, Vector4f color, float viewDistance, boolean thickenFog, float tickDelta, CallbackInfoReturnable<Fog> cir) {
       BetterWorld betterWorld = getModule();
       if (betterWorld.isEnabled() && betterWorld.fog.getValue()) {
-         float[] rgba = ColorUtil.rgba(WildClient.INSTANCE.getThemeManager().getTheme().color().getRGB());
+         float[] rgba = ColorUtil.rgba(betterWorld.fogColor.getColor().getRGB());
          float start = betterWorld.start.getValue();
          float end = betterWorld.end.getValue();
          Fog customFog = new Fog(start, end, FogShape.CYLINDER, rgba[0], rgba[1], rgba[2], betterWorld.alphaFog.getValue() / 100.0F);
@@ -48,7 +48,7 @@ public class BackgroundRendererMixin {
    private static void onGetFogColor(Camera camera, float tickDelta, ClientWorld world, int clampedViewDistance, float skyDarkness, CallbackInfoReturnable<Vector4f> cir) {
       BetterWorld betterWorld = getModule();
       if (betterWorld.isEnabled() && betterWorld.fog.getValue()) {
-         float[] rgba = ColorUtil.rgba(WildClient.INSTANCE.getThemeManager().getTheme().color().getRGB());
+         float[] rgba = ColorUtil.rgba(betterWorld.fogColor.getColor().getRGB());
          cir.setReturnValue(new Vector4f(rgba[0], rgba[1], rgba[2], betterWorld.alphaFog.getValue() / 100.0F));
       }
 

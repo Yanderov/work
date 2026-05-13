@@ -8,7 +8,7 @@ import dev.client.event.interfaces.ITickable;
 import dev.client.modules.Category;
 import dev.client.modules.IDisableable;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.util.IUtil;
 import java.util.List;
 import net.fabricmc.api.EnvType;
@@ -42,7 +42,7 @@ public class WebTrap extends Module implements ITickable, IRotateable, IUtil, ID
    private boolean rotationSet = false;
 
    public WebTrap() {
-      super(new PlayerModel("WebTrap", Category.UTIL, "Ставит паутину под противника, останавливая его"));
+      super(new ModuleBranding("WebTrap", Category.UTIL, "Ставит паутину под противника, останавливая его"));
    }
 
    public void onDisable() {

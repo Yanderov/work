@@ -10,7 +10,7 @@ import dev.client.modules.Category;
 import dev.client.modules.IDisableable;
 import dev.client.modules.IEnableable;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.util.IUtil;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -88,7 +88,7 @@ public class RotateTeacher extends Module implements IDisableable, IEnableable, 
    private double stdPitch;
 
    public RotateTeacher() {
-      super(new PlayerModel("RotateTeacher", Category.UTIL, "Records mouse & trains GRU rotation"));
+      super(new ModuleBranding("RotateTeacher", Category.UTIL, "Records mouse & trains GRU rotation"));
       this.initWeights();
    }
 

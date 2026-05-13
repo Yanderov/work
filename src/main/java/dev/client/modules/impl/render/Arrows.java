@@ -5,7 +5,7 @@ import dev.client.event.classes.Render2DEvent;
 import dev.client.event.interfaces.IRenderable2D;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.ColorSetting;
 import dev.client.modules.settings.impl.FloatSetting;
 import dev.client.modules.settings.impl.ModeSetting;
@@ -46,7 +46,7 @@ public class Arrows extends Module implements IRenderable2D, IUtil {
    private String currentMode = "type1.jpg";
 
    public Arrows() {
-      super(new PlayerModel("Arrows", Category.RENDER, "Рисует стрелки вокруг прицела направленные на противников"));
+      super(new ModuleBranding("Arrows", Category.RENDER, "Рисует стрелки вокруг прицела направленные на противников"));
       this.addSetting(this.mode, this.size, this.color);
    }
 

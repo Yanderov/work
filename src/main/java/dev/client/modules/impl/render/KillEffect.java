@@ -7,7 +7,7 @@ import dev.client.event.interfaces.IEntityDeath;
 import dev.client.event.interfaces.IWorldRender;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.BooleanSetting;
 import dev.client.modules.settings.impl.ModeSetting;
 import dev.client.util.IUtil;
@@ -38,7 +38,7 @@ public class KillEffect extends Module implements IUtil, IEntityDeath, IWorldRen
    private final Map<Entity, EntityRenderData> renderEntities = new ConcurrentHashMap();
 
    public KillEffect() {
-      super(new PlayerModel("KillEffect", Category.RENDER, "Добавляет анимацию гибели противника"));
+      super(new ModuleBranding("KillEffect", Category.RENDER, "Добавляет анимацию гибели противника"));
       this.addSetting(this.mobs, this.effectType);
    }
 

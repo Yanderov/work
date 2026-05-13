@@ -4,7 +4,7 @@ import dev.client.event.classes.DropItemEvent;
 import dev.client.event.interfaces.IDropable;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.BooleanSetting;
 import dev.client.modules.settings.impl.MultiBoxSetting;
 import dev.client.util.IUtil;
@@ -16,7 +16,7 @@ public class LockSlot extends Module implements IDropable, IUtil {
    private final MultiBoxSetting lockSlots = new MultiBoxSetting().name("Lock Slot").booleanSettings(new BooleanSetting().name("Slot 1").value(false), new BooleanSetting().name("Slot 2").value(false), new BooleanSetting().name("Slot 3").value(false), new BooleanSetting().name("Slot 4").value(false), new BooleanSetting().name("Slot 5").value(false), new BooleanSetting().name("Slot 6").value(false), new BooleanSetting().name("Slot 7").value(false), new BooleanSetting().name("Slot 8").value(false), new BooleanSetting().name("Slot 9").value(false));
 
    public LockSlot() {
-      super(new PlayerModel("LockSlot", Category.UTIL, "Не позволяет выбрасывать вещи из выбранных слотов хотбара"));
+      super(new ModuleBranding("LockSlot", Category.UTIL, "Не позволяет выбрасывать вещи из выбранных слотов хотбара"));
       this.addSetting(this.lockSlots);
    }
 

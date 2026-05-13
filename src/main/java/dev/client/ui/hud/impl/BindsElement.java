@@ -66,7 +66,7 @@ public class BindsElement extends HudElement {
             Color clientColor2 = ColorUtil.setAlpha(m.getAnimation().getOutput(), clientColor);
             rectangle = Builder.rectangle().size(new SizeState(1.0F, 8.0F)).color(new QuadColorState(clientColor2)).radius(new QuadRadiusState(0.5D)).smoothness(0.1F).build();
             rectangle.render(matrix, (double)this.draggable.x + 8.5D, (double)this.draggable.y + 28.25D + (double)this.offset);
-            themeText = (BuiltText)Builder.text().font(FontManager.SUISSEINTMEDIUM.get()).text(m.getPlayerModel().name()).color(ColorUtil.setAlpha(m.getAnimation().getOutput(), white)).size(7.2F).thickness(0.05F).build();
+            themeText = (BuiltText)Builder.text().font(FontManager.SUISSEINTMEDIUM.get()).text(m.getModuleBranding().name()).color(ColorUtil.setAlpha(m.getAnimation().getOutput(), white)).size(7.2F).thickness(0.05F).build();
             themeText.render(matrix, (double)this.draggable.x + 12.5D, (double)((float)(this.draggable.y + 28) + this.offset));
             themeText = (BuiltText)Builder.text().font(FontManager.SUISSEINTMEDIUM.get()).text(m.getNameBind()).color(clientColor2).size(7.2F).thickness(0.05F).build();
             themeText.render(matrix, (float)(this.draggable.x + 76 + 10) - FontManager.SUISSEINTMEDIUM.get().getWidth(m.getNameBind(), 7.2F) / 2.0F, (float)(this.draggable.y + 28) + this.offset);

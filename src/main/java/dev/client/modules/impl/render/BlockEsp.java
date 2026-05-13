@@ -10,7 +10,7 @@ import dev.client.modules.Category;
 import dev.client.modules.IDisableable;
 import dev.client.modules.IEnableable;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.BooleanSetting;
 import dev.client.modules.settings.impl.ColorSetting;
 import dev.client.modules.settings.impl.MultiBoxSetting;
@@ -72,7 +72,7 @@ public class BlockEsp extends Module implements IRenderable3D, IUtil, IDisableab
    private static final double EXPAND = 0.002;
 
    public BlockEsp() {
-      super(new PlayerModel("BlockEsp", Category.RENDER, "Показывает выбранные блоки"));
+      super(new ModuleBranding("BlockEsp", Category.RENDER, "Показывает выбранные блоки"));
       this.addSetting(this.blockOptions, this.color);
       ClientChunkEvents.CHUNK_LOAD.register((ClientChunkEvents.Load)(world, chunk) -> {
          if (this.isEnabled()) {

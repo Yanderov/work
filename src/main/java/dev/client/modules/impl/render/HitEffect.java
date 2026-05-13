@@ -7,7 +7,8 @@ import dev.client.event.interfaces.IAttackable;
 import dev.client.event.interfaces.IWorldRender;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
+import dev.client.modules.settings.impl.ColorSetting;
 import dev.client.util.IUtil;
 import dev.client.util.color.ColorUtil;
 import dev.client.util.render.RenderUtil3D;
@@ -24,10 +25,12 @@ import net.minecraft.util.shape.VoxelShape;
 
 @Environment(EnvType.CLIENT)
 public class HitEffect extends Module implements IWorldRender, IUtil, IAttackable {
+   private final ColorSetting color = new ColorSetting().name("Color").color(new Color(255, 255, 255, 255));
    final List<WaveEffect> waveEffects = new ArrayList<>();
 
    public HitEffect() {
-      super(new PlayerModel("HitEffect", Category.RENDER, "Добавляет анимацию попаданию по противнику"));
+      super(new ModuleBranding("HitEffect", Category.RENDER, "Добавляет анимацию попаданию по противнику"));
+      this.addSetting(this.color);
    }
 
    public void addWave(BlockPos pos) {
@@ -81,7 +84,7 @@ public class HitEffect extends Module implements IWorldRender, IUtil, IAttackabl
             float currentRadius = this.easeOutCubic(progress) * 8.0F;
             float globalAlpha = this.smoothAlpha(progress);
             if (!(globalAlpha <= 0.01F)) {
-               Color baseColor = WildClient.INSTANCE.getThemeManager().getTheme().color();
+               Color baseColor = HitEffect.this.color.getColor();
                int rendered = 0;
                int maxPerFrame = 400;
 

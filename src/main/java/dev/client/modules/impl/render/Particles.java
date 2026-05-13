@@ -13,8 +13,9 @@ import dev.client.event.interfaces.ITickable;
 import dev.client.modules.Category;
 import dev.client.modules.IDisableable;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.BooleanSetting;
+import dev.client.modules.settings.impl.ColorSetting;
 import dev.client.modules.settings.impl.ModeSetting;
 import dev.client.modules.settings.impl.MultiBoxSetting;
 import dev.client.util.IUtil;
@@ -23,6 +24,7 @@ import dev.client.util.animations.Direction;
 import dev.client.util.animations.impl.EaseBackIn;
 import dev.client.util.math.TimerUtil;
 import dev.client.util.player.MovementUtil;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -75,6 +77,7 @@ public class Particles extends Module implements IRenderable3D, ITickable, IUtil
    private final MultiBoxSetting particlesMode;
    private final ModeSetting moveMode;
    private final MultiBoxSetting triggers;
+   private final ColorSetting color = new ColorSetting().name("Color").color(Color.WHITE);
    private final List<List<Particle>> batchLists;
    private final List<Particle> particles;
    private final TimerUtil skySpawnTimer;
@@ -96,7 +99,7 @@ public class Particles extends Module implements IRenderable3D, ITickable, IUtil
    private int hitParticleCount;
 
    public Particles() {
-      super(new PlayerModel("Particles", Category.RENDER, "Добавляет в мир частицы появляющиеся после выбранных действий"));
+      super(new ModuleBranding("Particles", Category.RENDER, "Добавляет в мир частицы появляющиеся после выбранных действий"));
       this.particlesMode = new MultiBoxSetting().name("Particles").booleanSettings(new BooleanSetting().name(TYPE_NAMES[0]).value(true), new BooleanSetting().name(TYPE_NAMES[1]).value(true), new BooleanSetting().name(TYPE_NAMES[2]).value(true), new BooleanSetting().name(TYPE_NAMES[3]).value(true), new BooleanSetting().name(TYPE_NAMES[4]).value(true), new BooleanSetting().name(TYPE_NAMES[5]).value(true), new BooleanSetting().name(TYPE_NAMES[6]).value(true), new BooleanSetting().name(TYPE_NAMES[7]).value(true), new BooleanSetting().name(TYPE_NAMES[8]).value(true));
       this.moveMode = new ModeSetting().name("Move Mode").value("Down").modes("Up", "Down");
       this.triggers = new MultiBoxSetting().name("Triggers").booleanSettings(new BooleanSetting().name("Sky").value(true), new BooleanSetting().name("Move").value(true), new BooleanSetting().name("Attack").value(true));
@@ -114,7 +117,7 @@ public class Particles extends Module implements IRenderable3D, ITickable, IUtil
       this.upAxis = new Vector3f();
       this.lastRenderTime = System.nanoTime();
       this.moveDown = true;
-      this.addSetting(this.particlesMode, this.moveMode, this.triggers);
+      this.addSetting(this.particlesMode, this.moveMode, this.triggers, this.color);
    }
 
    public void onRender3D(Render3DEvent event) {
@@ -134,7 +137,7 @@ public class Particles extends Module implements IRenderable3D, ITickable, IUtil
          this.rightAxis.set(0.6F, 0.0F, 0.0F).rotate(this.cameraRotation);
          this.upAxis.set(0.0F, 0.6F, 0.0F).rotate(this.cameraRotation);
          boolean firstPerson = mc.options.getPerspective() == Perspective.FIRST_PERSON;
-         int themeRgb = WildClient.INSTANCE.getThemeManager().getTheme().color().getRGB() & 16777215;
+         int themeRgb = this.color.getColor().getRGB() & 16777215;
          MatrixStack matrices = event.getMatrixStack();
          Matrix4f positionMatrix = matrices.peek().getPositionMatrix();
          this.clearBatches();
@@ -467,4 +470,3 @@ public class Particles extends Module implements IRenderable3D, ITickable, IUtil
       }
    }
 }
-

@@ -8,14 +8,13 @@ import dev.client.event.interfaces.ITickable;
 import dev.client.modules.Category;
 import dev.client.modules.IDisableable;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.BooleanSetting;
 import dev.client.modules.settings.impl.ModeSetting;
 import dev.client.util.IUtil;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.IntStream;
@@ -44,12 +43,12 @@ public class AntiBot extends Module implements ITickable, IReceivePacketable, IU
    public final BooleanSetting removeBot = new BooleanSetting().name("RemoveBot").value(false);
 
    public AntiBot() {
-      super(new PlayerModel("AntiBot", Category.COMBAT, "Спасает от банов, определяя серверных ботов"));
+      super(new ModuleBranding("AntiBot", Category.COMBAT, "Спасает от банов, определяя серверных ботов"));
       this.addSetting(this.mode, this.removeBot);
    }
 
    public void onReceivePacket(ReceivePacketEvent receivePacketEvent) {
-      Packet packet = receivePacketEvent.getPacket();
+      Packet<?> packet = receivePacketEvent.getPacket();
       if (packet instanceof PlayerListS2CPacket list) {
          this.checkPlayerAfterSpawn(list);
       } else if (packet instanceof PlayerRemoveS2CPacket remove) {
@@ -58,8 +57,10 @@ public class AntiBot extends Module implements ITickable, IReceivePacketable, IU
    }
 
    public void onTick(TickEvent event) {
+      if (mc.world == null) return;
+
       if (!this.suspectSet.isEmpty()) {
-         mc.world.getPlayers().stream().filter((p) -> this.suspectSet.contains(p.getUuid())).forEach(this::evaluateSuspectPlayer);
+         mc.world.getPlayers().stream().filter((p) -> p != null && this.suspectSet.contains(p.getUuid())).forEach(this::evaluateSuspectPlayer);
       }
 
       if (this.mode.is("Matrix")) {
@@ -97,7 +98,7 @@ public class AntiBot extends Module implements ITickable, IReceivePacketable, IU
    }
 
    private boolean isRealPlayer(PlayerListS2CPacket.Entry entry, GameProfile profile) {
-      return entry.latency() < 2 || profile.getProperties() != null && !profile.getProperties().isEmpty();
+      return entry.latency() < 2 || (profile.getProperties() != null && !profile.getProperties().isEmpty());
    }
 
    private void evaluateSuspectPlayer(PlayerEntity player) {
@@ -114,8 +115,10 @@ public class AntiBot extends Module implements ITickable, IReceivePacketable, IU
    }
 
    private void matrixMode() {
-      for(Iterator<UUID> iterator = this.suspectSet.iterator(); iterator.hasNext(); iterator.remove()) {
-         UUID susPlayer = (UUID)iterator.next();
+      if (mc.world == null) return;
+
+      for(Iterator<UUID> iterator = this.suspectSet.iterator(); iterator.hasNext(); ) {
+         UUID susPlayer = iterator.next();
          PlayerEntity entity = mc.world.getPlayerByUuid(susPlayer);
          if (entity != null) {
             String playerName = entity.getName().getString();
@@ -133,58 +136,30 @@ public class AntiBot extends Module implements ITickable, IReceivePacketable, IU
             if (isFullArmor || isNameBot || isFakeUUID) {
                botSet.add(susPlayer);
             }
+            iterator.remove();
          }
       }
 
-      if (mc.player.age % 100 == 0) {
+      if (mc.player != null && mc.player.age % 100 == 0) {
          botSet.removeIf((uuid) -> mc.world.getPlayerByUuid(uuid) == null);
       }
 
    }
 
    private void ReallyWorldMode() {
+      if (mc.world == null) return;
       for(PlayerEntity entity : mc.world.getPlayers()) {
-         if (!entity.getUuid().equals(UUID.nameUUIDFromBytes(("OfflinePlayer:" + entity.getName().getString()).getBytes())) && !botSet.contains(entity.getUuid()) && !entity.getName().getString().contains("NPC") && !entity.getName().getString().startsWith("[ZNPC]")) {
+         if (entity != null && !entity.getUuid().equals(UUID.nameUUIDFromBytes(("OfflinePlayer:" + entity.getName().getString()).getBytes())) && !botSet.contains(entity.getUuid()) && !entity.getName().getString().contains("NPC") && !entity.getName().getString().startsWith("[ZNPC]")) {
             botSet.add(entity.getUuid());
          }
       }
 
    }
 
-   private void newMatrixMode() {
-      for(PlayerEntity entity : mc.world.getPlayers()) {
-         if (entity != mc.player) {
-            List<ItemStack> armorItems = StreamSupport.stream(entity.getArmorItems().spliterator(), false).toList();
-            boolean allArmorValid = true;
-
-            for(ItemStack item : armorItems) {
-               if (item.isEmpty() || !item.isEnchantable() || item.getDamage() > 0) {
-                  allArmorValid = false;
-                  break;
-               }
-            }
-
-            boolean hasSpecificArmor = false;
-
-            for(ItemStack item : armorItems) {
-               if (item.getItem() == Items.LEATHER_BOOTS || item.getItem() == Items.LEATHER_LEGGINGS || item.getItem() == Items.LEATHER_CHESTPLATE || item.getItem() == Items.LEATHER_HELMET || item.getItem() == Items.IRON_BOOTS || item.getItem() == Items.IRON_LEGGINGS || item.getItem() == Items.IRON_CHESTPLATE || item.getItem() == Items.IRON_HELMET) {
-                  hasSpecificArmor = true;
-                  break;
-               }
-            }
-
-            if (allArmorValid && hasSpecificArmor && entity.getStackInHand(Hand.OFF_HAND).getItem() == Items.AIR && entity.getStackInHand(Hand.MAIN_HAND).getItem() != Items.AIR && entity.getHungerManager().getFoodLevel() == 20 && !entity.getName().getString().contains("NPC") && !entity.getName().getString().startsWith("[ZNPC]")) {
-               botSet.add(entity.getUuid());
-            } else {
-               botSet.remove(entity.getUuid());
-            }
-         }
-      }
-
-   }
-
    public boolean isDuplicateProfile(GameProfile profile) {
-      return ((ClientPlayNetworkHandler)Objects.requireNonNull(mc.getNetworkHandler())).getPlayerList().stream().filter((player) -> player.getProfile().getName().equals(profile.getName()) && !player.getProfile().getId().equals(profile.getId())).count() == 1L;
+      if (mc.getNetworkHandler() == null || profile == null) return false;
+      ClientPlayNetworkHandler networkHandler = mc.getNetworkHandler();
+      return networkHandler.getPlayerList().stream().anyMatch((player) -> player.getProfile().getName().equals(profile.getName()) && !player.getProfile().getId().equals(profile.getId()));
    }
 
    public boolean isFullyEquipped(PlayerEntity entity) {
@@ -203,6 +178,7 @@ public class AntiBot extends Module implements ITickable, IReceivePacketable, IU
    }
 
    public boolean isBot(LivingEntity entity) {
+      if (entity == null) return false;
       String playerName = entity.getName().getString();
       boolean isNameBot = playerName.startsWith("CIT-") && !playerName.contains("NPC") && !playerName.startsWith("[ZNPC]");
       boolean isMarkedBot = botSet.contains(entity.getUuid());
@@ -210,10 +186,11 @@ public class AntiBot extends Module implements ITickable, IReceivePacketable, IU
    }
 
    public boolean isBot(UUID uuid) {
-      return botSet.contains(uuid);
+      return uuid != null && botSet.contains(uuid);
    }
 
    public boolean isBotU(Entity entity) {
+      if (entity == null) return false;
       return !entity.getUuid().equals(UUID.nameUUIDFromBytes(("OfflinePlayer:" + entity.getName().getString()).getBytes())) && entity.isInvisible() && !entity.getName().getString().contains("NPC") && !entity.getName().getString().startsWith("[ZNPC]");
    }
 
@@ -226,4 +203,3 @@ public class AntiBot extends Module implements ITickable, IReceivePacketable, IU
       this.reset();
    }
 }
-

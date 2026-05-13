@@ -89,7 +89,7 @@ public class ModuleElement implements IElementable, IMouseReleable, IKeyPressibl
          rectangle.render(matrix, x + 5.0D + this.module.getAnimation().getOutput() * 5.0D, y + 9.5D);
       }
 
-      BuiltText text = (BuiltText)Builder.text().font(FontManager.SUISSEINTMEDIUM.get()).text(this.module.isBinded() ? "Press key" : this.module.getPlayerModel().name()).color(colorText).size(7.5F).thickness(0.05F).build();
+      BuiltText text = (BuiltText)Builder.text().font(FontManager.SUISSEINTMEDIUM.get()).text(this.module.isBinded() ? "Press key" : this.module.getModuleBranding().name()).color(colorText).size(7.5F).thickness(0.05F).build();
       text.render(matrix, x + 9.0D + this.module.getAnimation().getOutput() * 5.0D, y + 9.0D);
       Color colorDesc = ColorUtil.setAlpha(this.animation, new Color(255, 255, 255, 61));
       Color colorDescEnabled = ColorUtil.setAlpha(this.animation * this.module.getAnimation().getOutput(), new Color(255, 255, 255, 122));

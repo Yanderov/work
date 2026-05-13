@@ -4,7 +4,7 @@ import dev.client.event.classes.TickEvent;
 import dev.client.event.interfaces.ITickable;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.util.IUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -14,7 +14,7 @@ import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
 @Environment(EnvType.CLIENT)
 public class NoItemBreak extends Module implements ITickable, IUtil {
    public NoItemBreak() {
-      super(new PlayerModel("NoItemBreak", Category.UTIL, "Убирает предмет из руки до его поломки"));
+      super(new ModuleBranding("NoItemBreak", Category.UTIL, "Убирает предмет из руки до его поломки"));
    }
 
    public void onTick(TickEvent event) {

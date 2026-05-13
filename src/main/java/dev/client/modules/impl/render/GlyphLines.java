@@ -11,10 +11,12 @@ import dev.client.event.interfaces.ITickable;
 import dev.client.modules.Category;
 import dev.client.modules.IDisableable;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.BooleanSetting;
+import dev.client.modules.settings.impl.ColorSetting;
 import dev.client.modules.settings.impl.FloatSetting;
 import dev.client.util.IUtil;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -39,6 +41,7 @@ public class GlyphLines extends Module implements IRenderable3D, ITickable, IUti
          GlyphLines.this.glyphs.clear();
       }
    }.name("Slow").value(true);
+   private final ColorSetting color = new ColorSetting().name("Color").color(new Color(255, 255, 255, 255));
    private final Random random = new Random(93882L);
    private final List<GlyphVectorGenerator> glyphs = new ArrayList<>();
    private static final int RING_SEGS = 32;
@@ -68,8 +71,8 @@ public class GlyphLines extends Module implements IRenderable3D, ITickable, IUti
    private static final int[][] AXES;
 
    public GlyphLines() {
-      super(new PlayerModel("GlyphLines", Category.RENDER, "Добавляет в мир бегущие линии"));
-      this.addSetting(this.quantity, this.slow);
+      super(new ModuleBranding("GlyphLines", Category.RENDER, "Добавляет в мир бегущие линии"));
+      this.addSetting(this.quantity, this.slow, this.color);
    }
 
    public void onDisable() {
@@ -102,7 +105,7 @@ public class GlyphLines extends Module implements IRenderable3D, ITickable, IUti
          double camY = camVec.y;
          double camZ = camVec.z;
          Matrix4f mat = stack.peek().getPositionMatrix();
-         int rgb = WildClient.INSTANCE.getThemeManager().getTheme().color().getRGB();
+         int rgb = this.color.getColor().getRGB();
          int tr = rgb >> 16 & 255;
          int tg = rgb >> 8 & 255;
          int tb = rgb & 255;

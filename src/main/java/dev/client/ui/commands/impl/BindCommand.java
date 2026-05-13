@@ -41,7 +41,7 @@ public class BindCommand extends Command {
    }
 
    private Module getByName(String name) {
-      return WildClient.INSTANCE.getModuleManager().getModules().stream().filter((module) -> module.getPlayerModel().name().equalsIgnoreCase(name)).findFirst().orElse(null);
+      return WildClient.INSTANCE.getModuleManager().getModules().stream().filter((module) -> module.getModuleBranding().name().equalsIgnoreCase(name)).findFirst().orElse(null);
    }
 }
 

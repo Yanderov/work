@@ -6,7 +6,7 @@ import dev.client.event.interfaces.ISendPacketable;
 import dev.client.mixins.other.IPlayerInteractEntityC2SPacketMixin;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.util.IUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -16,7 +16,7 @@ import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
 @Environment(EnvType.CLIENT)
 public class NoFriendDamage extends Module implements ISendPacketable, IUtil {
    public NoFriendDamage() {
-      super(new PlayerModel("NoFriendDamage", Category.COMBAT, "Отменяет урон по клиентским друзьям"));
+      super(new ModuleBranding("NoFriendDamage", Category.COMBAT, "Отменяет урон по клиентским друзьям"));
    }
 
    public void onSendPacket(SendPacketEvent sendPacketEvent) {

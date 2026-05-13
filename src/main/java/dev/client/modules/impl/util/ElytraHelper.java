@@ -11,7 +11,7 @@ import dev.client.modules.Category;
 import dev.client.modules.IDisableable;
 import dev.client.modules.IEnableable;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.impl.movement.Sprint;
 import dev.client.modules.settings.impl.BooleanSetting;
 import dev.client.modules.settings.impl.KeySetting;
@@ -42,7 +42,7 @@ public class ElytraHelper extends Module implements IInputable, ITickable, IUtil
    private final TimerUtil timerUtil2 = new TimerUtil();
 
    public ElytraHelper() {
-      super(new PlayerModel("ElytraSwap", Category.UTIL, "Чередует элитру с нагрудником по нажатию кнопки"));
+      super(new ModuleBranding("ElytraSwap", Category.UTIL, "Чередует элитру с нагрудником по нажатию кнопки"));
       this.addSetting(this.bind, this.firework, this.delay, this.autoFlight);
    }
 

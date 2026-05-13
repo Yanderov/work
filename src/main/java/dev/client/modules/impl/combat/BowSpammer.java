@@ -5,7 +5,7 @@ import dev.client.event.interfaces.ITickable;
 import dev.client.mixins.other.IClientWorldMixin;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.FloatSetting;
 import dev.client.util.IUtil;
 import dev.client.util.player.PacketUtil;
@@ -25,7 +25,7 @@ public class BowSpammer extends Module implements ITickable, IUtil {
    public FloatSetting value = new FloatSetting().name("Value").minValue(1.0F).minValue(1.0F).maxValue(18.0F).incriment(1.0F).value(5.0F);
 
    public BowSpammer() {
-      super(new PlayerModel("BowSpammer", Category.COMBAT, "Спаммит выстрелами вблизи с лука"));
+      super(new ModuleBranding("BowSpammer", Category.COMBAT, "Спаммит выстрелами вблизи с лука"));
       this.addSetting(this.value);
    }
 

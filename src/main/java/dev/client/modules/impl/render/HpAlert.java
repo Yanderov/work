@@ -5,7 +5,7 @@ import dev.client.event.interfaces.IRenderable2D;
 import dev.client.managers.FontManager;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.FloatSetting;
 import dev.client.util.render.builders.Builder;
 import dev.client.util.render.msdf.MsdfFont;
@@ -24,7 +24,7 @@ public class HpAlert extends Module implements IRenderable2D {
    private long lastTime = 0L;
 
    public HpAlert() {
-      super(new PlayerModel("HpAlert", Category.RENDER, "Уведомляет о падении здоровья игрока ниже заданного значения"));
+      super(new ModuleBranding("HpAlert", Category.RENDER, "Уведомляет о падении здоровья игрока ниже заданного значения"));
       this.addSetting(this.hp);
    }
 

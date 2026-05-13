@@ -4,7 +4,7 @@ import dev.client.event.classes.ClickEvent;
 import dev.client.event.interfaces.IClickaable;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.KeySetting;
 import dev.client.util.IUtil;
 import net.fabricmc.api.EnvType;
@@ -16,7 +16,7 @@ public class CordDropper extends Module implements IClickaable, IUtil {
    private final KeySetting bind = new KeySetting().name("Bind").value(0);
 
    public CordDropper() {
-      super(new PlayerModel("CordDropper", Category.UTIL, "Отправляет координаты в чат по нажатию кнопки"));
+      super(new ModuleBranding("CordDropper", Category.UTIL, "Отправляет координаты в чат по нажатию кнопки"));
       this.addSetting(this.bind);
    }
 

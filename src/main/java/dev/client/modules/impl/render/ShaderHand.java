@@ -7,10 +7,12 @@ import dev.client.event.interfaces.IShader;
 import dev.client.event.interfaces.IShaderHandable;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
+import dev.client.modules.settings.impl.ColorSetting;
 import dev.client.util.color.ColorUtil;
 import dev.client.util.player.MovementUtil;
 import dev.client.util.render.renderers.impl.HandBlurRenderer;
+import java.awt.Color;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -20,11 +22,13 @@ import org.joml.Matrix4f;
 
 @Environment(EnvType.CLIENT)
 public class ShaderHand extends Module implements IShader, IShaderHandable {
+   private final ColorSetting color = new ColorSetting().name("Color").color(new Color(255, 255, 255, 255));
    private Framebuffer savedBefore = null;
    private Framebuffer savedAfter = null;
 
    public ShaderHand() {
-      super(new PlayerModel("ShaderHand", Category.RENDER, "Изменяет отображение руки от первого лица"));
+      super(new ModuleBranding("ShaderHand", Category.RENDER, "Изменяет отображение руки от первого лица"));
+      this.addSetting(this.color);
    }
 
    public void onShader(ShaderEvent event) {
@@ -41,7 +45,7 @@ public class ShaderHand extends Module implements IShader, IShaderHandable {
                   int h = MinecraftClient.getInstance().getWindow().getScaledHeight();
                   if (w > 0 && h > 0) {
                      Matrix4f matrix = event.getDrawContext().getMatrices().peek().getPositionMatrix();
-                     float[] color = ColorUtil.rgba(WildClient.INSTANCE.getThemeManager().getTheme().color().getRGB());
+                     float[] color = ColorUtil.rgba(this.color.getColor().getRGB());
                      (new HandBlurRenderer(this.savedAfter, this.savedBefore, 12.0F, 0.01F, new float[]{color[0], color[1], color[2], 0.6F}, w, h)).render(matrix);
                   }
                }

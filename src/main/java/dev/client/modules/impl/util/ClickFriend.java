@@ -5,7 +5,7 @@ import dev.client.event.classes.ClickEvent;
 import dev.client.event.interfaces.IClickaable;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.KeySetting;
 import dev.client.util.IUtil;
 import dev.client.util.math.TimerUtil;
@@ -21,7 +21,7 @@ public class ClickFriend extends Module implements IUtil, IClickaable {
    private final KeySetting bind = new KeySetting().name("Bind").value(0);
 
    public ClickFriend() {
-      super(new PlayerModel("ClickFriend", Category.UTIL, "Добавляет наведенного игрока в клиентские друзья по нажатию кнопки"));
+      super(new ModuleBranding("ClickFriend", Category.UTIL, "Добавляет наведенного игрока в клиентские друзья по нажатию кнопки"));
       this.addSetting(this.bind);
    }
 

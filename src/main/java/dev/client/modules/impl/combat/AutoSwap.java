@@ -6,7 +6,7 @@ import dev.client.event.interfaces.IClickaable;
 import dev.client.modules.Category;
 import dev.client.modules.IEnableable;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.impl.movement.Sprint;
 import dev.client.modules.settings.impl.KeySetting;
 import dev.client.modules.settings.impl.ModeSetting;
@@ -30,7 +30,7 @@ public class AutoSwap extends Module implements IClickaable, IUtil, IEnableable 
    private Sprint sprint;
 
    public AutoSwap() {
-      super(new PlayerModel("AutoSwap", Category.COMBAT, "Чередует выбранные предметы во второй руке"));
+      super(new ModuleBranding("AutoSwap", Category.COMBAT, "Чередует выбранные предметы во второй руке"));
       this.addSetting(this.mode, this.swapTo, this.bind);
    }
 

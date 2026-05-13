@@ -7,7 +7,7 @@ import dev.client.event.interfaces.ITickable;
 import dev.client.modules.Category;
 import dev.client.modules.IEnableable;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.KeySetting;
 import dev.client.util.IUtil;
 import dev.client.util.math.TimerUtil;
@@ -24,7 +24,7 @@ public class ClickPearl extends Module implements ITickable, IEnableable, IUtil,
    private boolean changed = false;
 
    public ClickPearl() {
-      super(new PlayerModel("ClickPearl", Category.UTIL, "Бросает эндер жемчуг по нажатию кнопки"));
+      super(new ModuleBranding("ClickPearl", Category.UTIL, "Бросает эндер жемчуг по нажатию кнопки"));
       this.addSetting(this.bind);
    }
 

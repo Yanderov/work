@@ -4,7 +4,7 @@ import dev.client.event.classes.TickEvent;
 import dev.client.event.interfaces.ITickable;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.util.IUtil;
 import dev.client.util.math.TimerUtil;
 import dev.client.util.player.MovementUtil;
@@ -18,7 +18,7 @@ public class Sprint extends Module implements ITickable, IUtil {
    private boolean canSprint = true;
 
    public Sprint() {
-      super(new PlayerModel("Sprint", Category.MOVEMENT, "Активирует режим бега"));
+      super(new ModuleBranding("Sprint", Category.MOVEMENT, "Активирует режим бега"));
    }
 
    public void onTick(TickEvent event) {

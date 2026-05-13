@@ -9,7 +9,7 @@ import dev.client.modules.Category;
 import dev.client.modules.IDisableable;
 import dev.client.modules.IEnableable;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.impl.combat.Aura;
 import dev.client.modules.settings.impl.FloatSetting;
 import dev.client.util.IUtil;
@@ -25,7 +25,7 @@ public class ElytraMotion extends Module implements IUtil, ITickable, IMoveable,
    private Aura aura;
 
    public ElytraMotion() {
-      super(new PlayerModel("ElytraMotion", Category.MOVEMENT, "NoDesc"));
+      super(new ModuleBranding("ElytraMotion", Category.MOVEMENT, "NoDesc"));
       this.addSetting(this.range);
    }
 

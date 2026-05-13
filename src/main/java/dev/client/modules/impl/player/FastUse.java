@@ -5,7 +5,7 @@ import dev.client.event.interfaces.ITickable;
 import dev.client.mixins.other.IMinecraftClientMixin;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.BooleanSetting;
 import dev.client.modules.settings.impl.FloatSetting;
 import dev.client.modules.settings.impl.MultiBoxSetting;
@@ -22,7 +22,7 @@ public class FastUse extends Module implements ITickable, IUtil {
    private final MultiBoxSetting options = new MultiBoxSetting().name("Options").booleanSettings(new BooleanSetting().name("Blocks").value(false), new BooleanSetting().name("Crystals").value(false), new BooleanSetting().name("Exp").value(false));
 
    public FastUse() {
-      super(new PlayerModel("FastUse", Category.PLAYER, "Ускоряет использование выбранных предметов"));
+      super(new ModuleBranding("FastUse", Category.PLAYER, "Ускоряет использование выбранных предметов"));
       this.addSetting(this.delay, this.options);
    }
 

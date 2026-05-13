@@ -8,7 +8,7 @@ import dev.client.event.classes.ShaderHandEvent2D;
 import dev.client.event.interfaces.IShaderHandable;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -39,7 +39,7 @@ public class Crosshair extends Module implements IShaderHandable {
    private static final float[] LAYER_R = {3.4875004F, 4.1875005F, 5.5875F, 6.2875F};
 
    public Crosshair() {
-      super(new PlayerModel("Crosshair", Category.RENDER, "Изменяет прицел в игре"));
+      super(new ModuleBranding("Crosshair", Category.RENDER, "Изменяет прицел в игре"));
    }
 
    private void appendThickArcSoft(BufferBuilder buf, Matrix4f matrix, float cx, float cy, float startProgress, float endProgress, float r, float g, float b, float a, int segments) {

@@ -6,7 +6,7 @@ import dev.client.event.interfaces.IAttackable;
 import dev.client.event.interfaces.ITickable;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.util.IUtil;
 import dev.client.util.math.TimerUtil;
 import net.fabricmc.api.EnvType;
@@ -26,7 +26,7 @@ public class MakeBoost extends Module implements IAttackable, ITickable, IUtil {
    private int fallDistance;
 
    public MakeBoost() {
-      super(new PlayerModel("MakeBoost", Category.COMBAT, "NoDesc"));
+      super(new ModuleBranding("MakeBoost", Category.COMBAT, "NoDesc"));
    }
 
    public void onAttack(AttackEvent event) {

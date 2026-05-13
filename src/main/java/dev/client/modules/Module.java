@@ -21,7 +21,7 @@ import net.minecraft.client.MinecraftClient;
 
 @Environment(EnvType.CLIENT)
 public abstract class Module {
-   private final PlayerModel PlayerModel;
+   private final ModuleBranding moduleBranding;
    private boolean enabled;
    private boolean binded;
    private int bind;
@@ -35,10 +35,10 @@ public abstract class Module {
    private String[] desc;
    private boolean doubleDesc = false;
 
-   public Module(PlayerModel PlayerModel) {
+   public Module(ModuleBranding moduleBranding) {
       this.animation = new EaseBackIn(325, 1.0D, 0.1F, Direction.BACKWARDS);
       this.animSettings = new EaseBackIn(325, 1.0D, 0.1F, Direction.BACKWARDS);
-      this.PlayerModel = PlayerModel;
+      this.moduleBranding = moduleBranding;
       this.enabled = false;
       this.bind = -1;
       this.settings = new ArrayList<>();
@@ -53,7 +53,7 @@ public abstract class Module {
    public void initDesc() {
       this.defaultHeight = 38.5D;
       double xBind = 159.5D - (double)FontManager.SUISSEINTMEDIUM.get().getWidth(this.getNameBind(), 5.8F);
-      String[] array = this.getPlayerModel().desc().split(" ");
+      String[] array = this.getModuleBranding().desc().split(" ");
       double maxWidthText = xBind - 28.0D;
       this.desc = new String[2];
       this.desc[0] = "";
@@ -82,8 +82,8 @@ public abstract class Module {
 
    }
 
-   public PlayerModel getPlayerModel() {
-      return this.PlayerModel;
+   public ModuleBranding getModuleBranding() {
+      return this.moduleBranding;
    }
 
    public boolean isEnabled() {
@@ -116,13 +116,13 @@ public abstract class Module {
          WildClient.INSTANCE.getEventManager().register(this);
          this.animation.setDirection(Direction.FORWARDS);
          if (hasNofify) {
-            WildClient.INSTANCE.getNotifyManager().addNotify(this.getPlayerModel().name() + " was enabled", Status.SUCCESS);
+            WildClient.INSTANCE.getNotifyManager().addNotify(this.getModuleBranding().name() + " was enabled", Status.SUCCESS);
          }
       } else {
          WildClient.INSTANCE.getEventManager().unregister(this);
          this.animation.setDirection(Direction.BACKWARDS);
          if (hasNofify) {
-            WildClient.INSTANCE.getNotifyManager().addNotify(this.getPlayerModel().name() + " was disabled", Status.SUCCESS);
+            WildClient.INSTANCE.getNotifyManager().addNotify(this.getModuleBranding().name() + " was disabled", Status.SUCCESS);
          }
       }
 

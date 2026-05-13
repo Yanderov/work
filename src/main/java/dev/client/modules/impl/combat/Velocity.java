@@ -8,7 +8,7 @@ import dev.client.modules.Category;
 import dev.client.modules.IDisableable;
 import dev.client.modules.IEnableable;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.ModeSetting;
 import dev.client.util.IUtil;
 import java.lang.reflect.Field;
@@ -32,7 +32,7 @@ public class Velocity extends Module implements IReceivePacketable, IUtil, ITick
    private int ccCooldown;
 
    public Velocity() {
-      super(new PlayerModel("Velocity", Category.COMBAT, "Убирает отдачу при получении урона"));
+      super(new ModuleBranding("Velocity", Category.COMBAT, "Убирает отдачу при получении урона"));
       this.addSetting(this.mode);
    }
 

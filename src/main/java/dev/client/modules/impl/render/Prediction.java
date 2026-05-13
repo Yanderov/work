@@ -12,7 +12,8 @@ import dev.client.managers.FontManager;
 import dev.client.modules.Category;
 import dev.client.modules.IDisableable;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
+import dev.client.modules.settings.impl.ColorSetting;
 import dev.client.util.IUtil;
 import dev.client.util.render.ProjectionUtil;
 import dev.client.util.render.builders.Builder;
@@ -44,10 +45,12 @@ import org.lwjgl.opengl.GL11;
 
 @Environment(EnvType.CLIENT)
 public class Prediction extends Module implements IRenderable3D, IUtil, IDisableable, IRenderable2D {
+   private final ColorSetting color = new ColorSetting().name("Color").color(Color.WHITE);
    private final List<PredictionPearl> pearls = new ArrayList<>();
 
    public Prediction() {
-      super(new PlayerModel("Prediction", Category.RENDER, "Показывает траекторию и место падения летящим предметам"));
+      super(new ModuleBranding("Prediction", Category.RENDER, "Показывает траекторию и место падения летящим предметам"));
+      this.addSetting(this.color);
    }
 
    public void onRender3D(Render3DEvent event) {
@@ -56,7 +59,7 @@ public class Prediction extends Module implements IRenderable3D, IUtil, IDisable
       Vec3d cameraPos = camera.getPos();
       matrices.push();
       matrices.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
-      Color themeColor = WildClient.INSTANCE.getThemeManager().getTheme().color();
+      Color themeColor = this.color.getColor();
       int color = themeColor.getRGB();
       float r = (float)(color >> 16 & 255) / 255.0F;
       float g = (float)(color >> 8 & 255) / 255.0F;
@@ -197,7 +200,7 @@ public class Prediction extends Module implements IRenderable3D, IUtil, IDisable
             if (!(pearl.progress <= 0.0F)) {
                float cx = pearl.vector2f.getX();
                float cy = pearl.vector2f.getY();
-               Color arcColor = WildClient.INSTANCE.getThemeManager().getTheme().color();
+               Color arcColor = this.color.getColor();
                this.appendThickArc(buf, matrix, cx, cy, 8.1F, 1.75F, 0.0F, pearl.progress, arcColor, segments);
             }
          }
@@ -324,4 +327,3 @@ public class Prediction extends Module implements IRenderable3D, IUtil, IDisable
       }
    }
 }
-

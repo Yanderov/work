@@ -6,7 +6,7 @@ import dev.client.event.interfaces.IReceivePacketable;
 import dev.client.modules.Category;
 import dev.client.modules.IDisableable;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.packet.s2c.play.WorldTimeUpdateS2CPacket;
@@ -23,7 +23,7 @@ public class SyncTps extends Module implements IReceivePacketable, IDisableable 
    private static final float MAX_TPS = 20.0F;
 
    public SyncTps() {
-      super(new PlayerModel("SyncTps", Category.COMBAT, "Синхронизирует удары на клиенте и сервере, помогая при серверных лагах"));
+      super(new ModuleBranding("SyncTps", Category.COMBAT, "Синхронизирует удары на клиенте и сервере, помогая при серверных лагах"));
    }
 
    public void onReceivePacket(ReceivePacketEvent receivePacketEvent) {

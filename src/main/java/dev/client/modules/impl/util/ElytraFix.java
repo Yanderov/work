@@ -4,7 +4,7 @@ import dev.client.event.classes.TickEvent;
 import dev.client.event.interfaces.ITickable;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.util.IUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -24,7 +24,7 @@ public class ElytraFix extends Module implements ITickable, IUtil {
    public static long delay;
 
    public ElytraFix() {
-      super(new PlayerModel("ElytraFix", Category.UTIL, "NoDesc"));
+      super(new ModuleBranding("ElytraFix", Category.UTIL, "NoDesc"));
    }
 
    public void onTick(TickEvent event) {

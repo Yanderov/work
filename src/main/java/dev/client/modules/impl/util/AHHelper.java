@@ -2,7 +2,7 @@ package dev.client.modules.impl.util;
 
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import java.awt.Color;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -12,7 +12,7 @@ import net.minecraft.screen.slot.Slot;
 @Environment(EnvType.CLIENT)
 public class AHHelper extends Module {
    public AHHelper() {
-      super(new PlayerModel("AHHelper", Category.UTIL, "NoDesc"));
+      super(new ModuleBranding("AHHelper", Category.UTIL, "NoDesc"));
    }
 
    public void renderCheat(DrawContext context, Slot slot) {

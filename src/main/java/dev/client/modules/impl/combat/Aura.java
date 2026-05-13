@@ -25,7 +25,7 @@ import dev.client.modules.Category;
 import dev.client.modules.IDisableable;
 import dev.client.modules.IEnableable;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.impl.movement.Sprint;
 import dev.client.modules.settings.impl.BooleanSetting;
 import dev.client.modules.settings.impl.FloatSetting;
@@ -72,15 +72,22 @@ import org.joml.Vector2f;
 
 @Environment(EnvType.CLIENT)
 public class Aura extends Module implements ITickable, IRenderable3D, IUtil, ITravelable, IFireworkable, IInputable, ISendPacketable, IEnableable, IRotateable, IMoveCorrectionable, IRenderable2D, IDisableable {
-   private final ModeSetting mode = new ModeSetting().name("Mode").value("ReallyWorld").modes("ReallyWorld");
+   private final ModeSetting mode = new ModeSetting().name("Mode").value("ReallyWorld").modes("ReallyWorld", "Snaps", "Normal", "1.8.9", "Aggressive");
    private final FloatSetting preaim = new FloatSetting().name("PreAim").value(0.5F).minValue(0.0F).maxValue(2.0F).incriment(0.1F);
    private final FloatSetting distance = new FloatSetting().name("Distance").value(3.0F).minValue(3.0F).maxValue(6.0F).incriment(0.1F);
+   private final BooleanSetting alwayse = new BooleanSetting() {
+      public boolean isVisible() {
+         return Aura.this.mode.is("Aggressive");
+      }
+   }.name("Constant aim").value(true);
+   private final BooleanSetting cooldown = new BooleanSetting().name("Attack delay").value(true);
    private final ModeSetting espMode = new ModeSetting() {
       public void onChangeState(String val) {
          switch (val) {
             case "Marker":
                Aura.this.curretEspMode = new DefaultMode();
                ((DefaultMode)Aura.this.curretEspMode).setMode(Aura.this.getMode(Aura.this.markerMode.getValue()));
+               Aura.this.curretEspMode.setColorMode(Aura.this.markerColor.getValue());
                break;
             case "Fire":
                Aura.this.curretEspMode = new FireMode();
@@ -101,6 +108,18 @@ public class Aura extends Module implements ITickable, IRenderable3D, IUtil, ITr
          super.onChangeState(val);
       }
    }.name("MarketMode").value("Type 1").modes("Type 1", "Type 2", "Type 3", "Type 4");
+   private final ModeSetting markerColor = new ModeSetting() {
+      public boolean isVisible() {
+         return Aura.this.espMode.is("Marker");
+      }
+
+      public void onChangeState(String val) {
+         if (Aura.this.curretEspMode != null) {
+            Aura.this.curretEspMode.setColorMode(val);
+         }
+         super.onChangeState(val);
+      }
+   }.name("MarketColor").value("White").modes("White", "Black", "Black-White");
    private final MultiBoxSetting targets = new MultiBoxSetting().name("Targets").booleanSettings(new BooleanSetting().name("Players").value(false), new BooleanSetting().name("Nakeds").value(false), new BooleanSetting().name("Mobs").value(false), new BooleanSetting().name("Animals").value(false), new BooleanSetting().name("Friends").value(false), new BooleanSetting().name("Naked invisibles").value(false), new BooleanSetting().name("Invisibles").value(false), new BooleanSetting().name("Villager").value(false), new BooleanSetting().name("Bots").value(false));
    private final MultiBoxSetting sort = new MultiBoxSetting().name("Sort").booleanSettings(new BooleanSetting().name("Hp").value(false), new BooleanSetting().name("Effects").value(false), new BooleanSetting().name("Distance").value(false), new BooleanSetting().name("Armor").value(false));
    public ModeSetting correction = new ModeSetting().name("Correction").value("Free").modes("Focused", "Free", "None");
@@ -150,9 +169,9 @@ public class Aura extends Module implements ITickable, IRenderable3D, IUtil, ITr
    private SyncTps syncTps;
 
    public Aura() {
-      super(new PlayerModel("Aura", Category.COMBAT, "Атакует противников рядом с игроком"));
+      super(new ModuleBranding("Aura", Category.COMBAT, "Атакует противников рядом с игроком"));
       this.curretEspMode = new DefaultMode();
-      this.addSetting(this.mode, this.preaim, this.distance, this.espMode, this.markerMode, this.targets, this.sort, this.correction, this.options, this.offSprintMode, this.smartCrits, this.miniJump, this.autoFireWork, this.fireworkCooldown, this.betterTarget, this.elytraDistance);
+      this.addSetting(this.mode, this.preaim, this.distance, this.alwayse, this.cooldown, this.espMode, this.markerMode, this.markerColor, this.targets, this.sort, this.correction, this.options, this.offSprintMode, this.smartCrits, this.miniJump, this.autoFireWork, this.fireworkCooldown, this.betterTarget, this.elytraDistance);
    }
 
    private String getMode(String mode) {
@@ -202,9 +221,21 @@ public class Aura extends Module implements ITickable, IRenderable3D, IUtil, ITr
          }
 
          if (!this.options.getValueByName("NoEatAttack") || !this.isUseItems()) {
-            this.attack();
+            if (this.mode.is("1.8.9")) {
+                if (this.target.distanceTo(mc.player) <= this.distance.getValue() && this.attack.isReached((long)(540 + ThreadLocalRandom.current().nextInt(30)))) {
+                    this.attack();
+                } else if (this.target != null) {
+                    mc.player.swingHand(Hand.MAIN_HAND);
+                }
+            } else {
+                this.attack();
+            }
          }
       } else {
+         if (this.mode.is("Aggressive") && this.alwayse.getValue()) {
+             // Keep rotations even without target? No, standard behavior is usually reset.
+             // Sirius Aggressive resets if target is null, but maybe constant aim means something else.
+         }
          this.rotate = new Vector2f(mc.player.getYaw(), mc.player.getPitch());
       }
 
@@ -343,7 +374,7 @@ public class Aura extends Module implements ITickable, IRenderable3D, IUtil, ITr
          this.lastYaw = clampedYaw;
       } else {
           switch (this.mode.getValue()) {
-            case "ReallyWorld":
+            case "ReallyWorld" -> {
                Vec3d targetTorso = this.target.getPos().add(0.0D, (this.target.getHeight() / 2.0F), 0.0D);
                Vec3d eyePos = mc.player.getEyePos();
                Vec3d vec = targetTorso.subtract(eyePos);
@@ -359,6 +390,52 @@ public class Aura extends Module implements ITickable, IRenderable3D, IUtil, ITr
                yaw -= (yaw - this.rotate.x) % gcd2;
                pitch -= (pitch - this.rotate.y) % gcd2;
                this.rotate = new Vector2f(yaw, pitch);
+            }
+            case "Snaps" -> {
+                Vec3d targetTorso = this.target.getPos().add(0.0D, (this.target.getHeight() / 2.0F), 0.0D);
+                Vec3d eyePos = mc.player.getEyePos();
+                Vec3d vec = targetTorso.subtract(eyePos);
+                float yaw = (float)MathHelper.wrapDegrees(Math.toDegrees(Math.atan2(vec.z, vec.x)) - 90.0D);
+                float pitch = (float)(-Math.toDegrees(Math.atan2(vec.y, Math.hypot(vec.x, vec.z))));
+                float gcd = Gcd.getGCD();
+                yaw -= (yaw - this.rotate.x) % gcd;
+                pitch -= (pitch - this.rotate.y) % gcd;
+                this.rotate = new Vector2f(yaw, pitch);
+            }
+            case "Normal", "1.8.9" -> {
+                Vec3d targetTorso = this.target.getPos().add(0.0D, (this.target.getHeight() / 2.0F), 0.0D);
+                Vec3d eyePos = mc.player.getEyePos();
+                Vec3d vec = targetTorso.subtract(eyePos);
+                float targetYaw = (float)MathHelper.wrapDegrees(Math.toDegrees(Math.atan2(vec.z, vec.x)) - 90.0D);
+                float targetPitch = (float)(-Math.toDegrees(Math.atan2(vec.y, Math.hypot(vec.x, vec.z))));
+                float diffYaw = MathHelper.wrapDegrees(targetYaw - this.rotate.x);
+                float diffPitch = MathHelper.wrapDegrees(targetPitch - this.rotate.y);
+                float step = 15.0F;
+                float yaw = this.rotate.x + MathHelper.clamp(diffYaw, -step, step);
+                float pitch = MathHelper.clamp(this.rotate.y + MathHelper.clamp(diffPitch, -step, step), -90.0F, 90.0F);
+                float gcd = Gcd.getGCD();
+                yaw -= (yaw - this.rotate.x) % gcd;
+                pitch -= (pitch - this.rotate.y) % gcd;
+                this.rotate = new Vector2f(yaw, pitch);
+            }
+            case "Aggressive" -> {
+                Vec3d targetTorso = this.target.getPos().add(0.0D, (this.target.getHeight() / 2.0F), 0.0D);
+                Vec3d eyePos = mc.player.getEyePos();
+                Vec3d vec = targetTorso.subtract(eyePos);
+                float targetYaw = (float)MathHelper.wrapDegrees(Math.toDegrees(Math.atan2(vec.z, vec.x)) - 90.0D);
+                float targetPitch = (float)(-Math.toDegrees(Math.atan2(vec.y, Math.hypot(vec.x, vec.z))));
+                double d3 = Math.pow((Double)mc.options.getMouseSensitivity().getValue() * 0.6F + 0.2F, 3.0);
+                double d4 = d3 * 8.0;
+                float diffYaw = MathHelper.wrapDegrees(targetYaw - this.rotate.x);
+                float diffPitch = MathHelper.wrapDegrees(targetPitch - this.rotate.y);
+                int x = (int)Math.round(diffYaw / (d4 * 0.15));
+                int y = (int)Math.round(diffPitch / (d4 * 0.15));
+                float f = (float)(x * d4 * 0.15);
+                float f1 = (float)(y * d4 * 0.15);
+                this.rotate.x += f;
+                this.rotate.y += f1;
+                this.rotate.y = MathHelper.clamp(this.rotate.y, -90.0F, 90.0F);
+            }
          }
       }
 

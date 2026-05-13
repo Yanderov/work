@@ -15,7 +15,7 @@ import dev.client.mixins.other.IPlayerMoveC2SPacket;
 import dev.client.modules.Category;
 import dev.client.modules.IEnableable;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.BooleanSetting;
 import dev.client.modules.settings.impl.ModeSetting;
 import dev.client.modules.settings.impl.MultiBoxSetting;
@@ -57,7 +57,7 @@ public class AutoPotion extends Module implements ITickable, IRenderable2D, IRot
    private TimerUtil throwingTimeout = new TimerUtil();
 
    public AutoPotion() {
-      super(new PlayerModel("AutoPotion", Category.COMBAT, "Бросает полезные взрывные зелья под игрока"));
+      super(new ModuleBranding("AutoPotion", Category.COMBAT, "Бросает полезные взрывные зелья под игрока"));
       this.addSetting(this.mode, this.potions);
    }
 

@@ -6,7 +6,7 @@ import dev.client.event.interfaces.IAttackable;
 import dev.client.event.interfaces.ITickable;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.util.IUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -17,7 +17,7 @@ public class ShiftTap extends Module implements ITickable, IAttackable, IUtil {
    boolean isModuleControllingSneak = false;
 
    public ShiftTap() {
-      super(new PlayerModel("ShiftTap", Category.COMBAT, "Присаживается после удара"));
+      super(new ModuleBranding("ShiftTap", Category.COMBAT, "Присаживается после удара"));
    }
 
    private void startShiftTap() {

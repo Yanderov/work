@@ -8,7 +8,7 @@ import dev.client.event.classes.WorldRenderEvent;
 import dev.client.event.interfaces.IWorldRender;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.ColorSetting;
 import dev.client.util.IUtil;
 import dev.client.util.color.ColorUtil;
@@ -36,7 +36,7 @@ public class ChinaHat extends Module implements IWorldRender, IUtil {
    private final ColorSetting color = new ColorSetting().name("Color").color(new Color(255, 255, 255, 255));
 
    public ChinaHat() {
-      super(new PlayerModel("ChinaHat", Category.RENDER, "Добавляет игроку шляпу на голове"));
+      super(new ModuleBranding("ChinaHat", Category.RENDER, "Добавляет игроку шляпу на голове"));
       this.addSetting(this.color);
    }
 

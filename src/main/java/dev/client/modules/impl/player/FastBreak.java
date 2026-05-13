@@ -5,7 +5,7 @@ import dev.client.event.interfaces.IBreakable;
 import dev.client.mixins.other.IClientPlayerInteractionManagerMixin;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.util.IUtil;
 import dev.client.util.math.TimerUtil;
 import net.fabricmc.api.EnvType;
@@ -22,7 +22,7 @@ public class FastBreak extends Module implements IBreakable, IUtil {
    BlockPos blockPos = null;
 
    public FastBreak() {
-      super(new PlayerModel("FastBreak", Category.PLAYER, "Убирает задержку на ломание блоков"));
+      super(new ModuleBranding("FastBreak", Category.PLAYER, "Убирает задержку на ломание блоков"));
    }
 
    public void onBreak(BreakEvent event) {

@@ -9,7 +9,7 @@ import dev.client.event.interfaces.ITickable;
 import dev.client.modules.Category;
 import dev.client.modules.IDisableable;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.BooleanSetting;
 import dev.client.util.IUtil;
 import dev.client.util.aura.AuraUtil;
@@ -43,7 +43,7 @@ public class AutoExplosion extends Module implements ITickable, IRotateable, IPl
    }.name("Break").value(false);
 
    public AutoExplosion() {
-      super(new PlayerModel("AutoExplosion", Category.COMBAT, "Ставит кристалл Энда на размещенный обсидиан"));
+      super(new ModuleBranding("AutoExplosion", Category.COMBAT, "Ставит кристалл Энда на размещенный обсидиан"));
       this.addSetting(this.breake);
    }
 

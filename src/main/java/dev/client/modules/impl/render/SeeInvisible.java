@@ -5,14 +5,14 @@ import dev.client.event.classes.EntityColorEvent;
 import dev.client.event.interfaces.IEntityColorable;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 @Environment(EnvType.CLIENT)
 public class SeeInvisible extends Module implements IEntityColorable {
    public SeeInvisible() {
-      super(new PlayerModel("SeeInvisible", Category.RENDER, "Показывает противников в невидимости"));
+      super(new ModuleBranding("SeeInvisible", Category.RENDER, "Показывает противников в невидимости"));
    }
 
    public void changeColor(EntityColorEvent event) {

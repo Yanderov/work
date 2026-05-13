@@ -9,7 +9,7 @@ import dev.client.modules.ClassMode;
 import dev.client.modules.IDisableable;
 import dev.client.modules.IEnableable;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.impl.movement.blink.AutoTP;
 import dev.client.modules.impl.movement.blink.DefaultTP;
 import dev.client.modules.settings.impl.FloatSetting;
@@ -41,7 +41,7 @@ public class Blink extends Module implements ITickable, ISendPacketable, IDisabl
    }.name("Delay").minValue(1.0F).maxValue(20.0F).value(5.0F).incriment(1.0F);
 
    public Blink() {
-      super(new PlayerModel("Blink", Category.MOVEMENT, "При включении — зависание, при выключении — телепорт на новое место."));
+      super(new ModuleBranding("Blink", Category.MOVEMENT, "При включении — зависание, при выключении — телепорт на новое место."));
       this.addSetting(this.mode, this.delay);
    }
 

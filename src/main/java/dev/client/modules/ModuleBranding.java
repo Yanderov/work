@@ -4,5 +4,5 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 @Environment(EnvType.CLIENT)
-public record PlayerModel(String name, Category category, String desc) {
+public record ModuleBranding(String name, Category category, String desc) {
 }

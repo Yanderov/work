@@ -2,7 +2,7 @@ package dev.client.modules.impl.player;
 
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.BooleanSetting;
 import dev.client.util.IUtil;
 import net.fabricmc.api.EnvType;
@@ -14,7 +14,7 @@ public class NoEntityTrace extends Module implements IUtil {
    public BooleanSetting noSword = new BooleanSetting().name("No Sword").value(false);
 
    public NoEntityTrace() {
-      super(new PlayerModel("NoEntityTrace", Category.PLAYER, "Позволяет взаимодействовать с интерактивными блоками через сущностей"));
+      super(new ModuleBranding("NoEntityTrace", Category.PLAYER, "Позволяет взаимодействовать с интерактивными блоками через сущностей"));
    }
 
    public boolean shouldIgnoreEntityTrace() {

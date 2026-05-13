@@ -5,7 +5,7 @@ import dev.client.event.classes.BoundingBoxControlEvent;
 import dev.client.event.interfaces.IBoundingBoxControl;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.FloatSetting;
 import dev.client.util.IUtil;
 import net.fabricmc.api.EnvType;
@@ -21,7 +21,7 @@ public class HitBox extends Module implements IBoundingBoxControl, IUtil {
    private final FloatSetting y = new FloatSetting().name("Y").value(0.0F).minValue(0.0F).maxValue(3.0F).incriment(0.01F);
 
    public HitBox() {
-      super(new PlayerModel("HitBox", Category.COMBAT, "Увеличивает границы нанесения урона по противнику"));
+      super(new ModuleBranding("HitBox", Category.COMBAT, "Увеличивает границы нанесения урона по противнику"));
       this.addSetting(this.xz, this.y);
    }
 
@@ -32,7 +32,7 @@ public class HitBox extends Module implements IBoundingBoxControl, IUtil {
          float xzExpand = this.xz.getValue();
          float yExpand = this.y.getValue();
          Box changedBox = new Box(box.minX - (double)(xzExpand / 2.0F), box.minY - (double)(yExpand / 2.0F), box.minZ - (double)(xzExpand / 2.0F), box.maxX + (double)(xzExpand / 2.0F), box.maxY + (double)(yExpand / 2.0F), box.maxZ + (double)(xzExpand / 2.0F));
-         if (living != mc.player) {
+         if (mc.player != null && living != mc.player) {
             if (living instanceof PlayerEntity) {
                PlayerEntity player = (PlayerEntity)living;
                if (player.getNameForScoreboard().equalsIgnoreCase(mc.player.getNameForScoreboard())) {

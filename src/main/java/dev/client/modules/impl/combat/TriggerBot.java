@@ -6,7 +6,7 @@ import dev.client.event.interfaces.ITickable;
 import dev.client.modules.Category;
 import dev.client.modules.IEnableable;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.BooleanSetting;
 import dev.client.util.aura.AuraUtil;
 import dev.client.util.math.TimerUtil;
@@ -36,7 +36,7 @@ public class TriggerBot extends Module implements ITickable, IEnableable {
    private float randValue;
 
    public TriggerBot() {
-      super(new PlayerModel("TriggerBot", Category.COMBAT, "Бьет противника при наведении"));
+      super(new ModuleBranding("TriggerBot", Category.COMBAT, "Бьет противника при наведении"));
       this.addSetting(this.onlyCrits, this.smartCrits, this.attackInvisibles);
       this.timerUtil = new TimerUtil();
    }

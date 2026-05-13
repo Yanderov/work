@@ -7,11 +7,13 @@ import dev.client.event.interfaces.ITickable;
 import dev.client.modules.Category;
 import dev.client.modules.IDisableable;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.BooleanSetting;
+import dev.client.modules.settings.impl.ColorSetting;
 import dev.client.modules.settings.impl.FloatSetting;
 import dev.client.modules.settings.impl.ModeSetting;
 import dev.client.util.IUtil;
+import java.awt.Color;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -52,6 +54,11 @@ public class BetterWorld extends Module implements IReceivePacketable, ITickable
          return BetterWorld.this.fog.getValue();
       }
    }.name("AlphaFog").minValue(30.0F).maxValue(100.0F).value(90.0F).incriment(5.0F);
+   public final ColorSetting fogColor = new ColorSetting() {
+      public boolean isVisible() {
+         return BetterWorld.this.fog.getValue();
+      }
+   }.name("Fog Color").color(new Color(0, 0, 0, 255));
    public final BooleanSetting skyShader = new BooleanSetting() {
       public void onChangeState(boolean value) {
          MinecraftClient.getInstance().options.getBobView().setValue(false);
@@ -67,8 +74,8 @@ public class BetterWorld extends Module implements IReceivePacketable, ITickable
    }.name("WeatherMode").value("Clear").modes("Clear", "Rain", "Storm");
 
    public BetterWorld() {
-      super(new PlayerModel("BetterWorld", Category.RENDER, "Изменяет отображение мира"));
-      this.addSetting(this.changeTime, this.time, this.fullBright, this.fog, this.start, this.end, this.alphaFog, this.skyShader, this.weather, this.weatherMode);
+      super(new ModuleBranding("BetterWorld", Category.RENDER, "Изменяет отображение мира"));
+      this.addSetting(this.changeTime, this.time, this.fullBright, this.fog, this.start, this.end, this.alphaFog, this.fogColor, this.skyShader, this.weather, this.weatherMode);
    }
 
    public void onReceivePacket(ReceivePacketEvent receivePacketEvent) {

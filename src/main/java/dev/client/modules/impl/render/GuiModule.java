@@ -5,7 +5,7 @@ import dev.client.modules.Category;
 import dev.client.modules.IDisableable;
 import dev.client.modules.IEnableable;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -14,7 +14,7 @@ import net.minecraft.client.gui.screen.Screen;
 @Environment(EnvType.CLIENT)
 public class GuiModule extends Module implements IEnableable, IDisableable {
    public GuiModule() {
-      super(new PlayerModel("Gui", Category.RENDER, "Показывает меню чита"));
+      super(new ModuleBranding("Gui", Category.RENDER, "Показывает меню чита"));
       this.setBind(344);
    }
 

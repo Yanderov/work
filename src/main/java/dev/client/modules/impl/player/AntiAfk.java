@@ -8,7 +8,7 @@ import dev.client.modules.Category;
 import dev.client.modules.IDisableable;
 import dev.client.modules.IEnableable;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.BooleanSetting;
 import dev.client.modules.settings.impl.FloatSetting;
 import dev.client.ui.gui.Gui;
@@ -32,7 +32,7 @@ public class AntiAfk extends Module implements IRenderable2D, ITickable, IEnable
    private final Random random;
 
    public AntiAfk() {
-      super(new PlayerModel("AntiAfk   ", Category.PLAYER, "Делает выбранные действия, предотвращая кик с сервера"));
+      super(new ModuleBranding("AntiAfk   ", Category.PLAYER, "Делает выбранные действия, предотвращая кик с сервера"));
       this.addSetting(this.rotate, this.speed, this.jump, this.walk);
       this.random = new Random();
    }

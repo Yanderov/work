@@ -4,7 +4,7 @@ import dev.client.event.classes.TickEvent;
 import dev.client.event.interfaces.ITickable;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.FloatSetting;
 import dev.client.util.IUtil;
 import net.fabricmc.api.EnvType;
@@ -17,7 +17,7 @@ public class AutoApple extends Module implements ITickable, IUtil {
    private boolean isEating;
 
    public AutoApple() {
-      super(new PlayerModel("AutoApple", Category.COMBAT, "Съедает золотое яблоко при здоровье ниже указанного"));
+      super(new ModuleBranding("AutoApple", Category.COMBAT, "Съедает золотое яблоко при здоровье ниже указанного"));
       this.addSetting(this.hp);
    }
 

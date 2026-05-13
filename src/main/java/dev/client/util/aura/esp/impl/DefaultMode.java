@@ -59,11 +59,22 @@ public class DefaultMode extends EspMode implements IUtil {
          Matrix4f matrix = matrices.peek().getPositionMatrix();
          RenderSystem.setShader(ShaderProgramKeys.POSITION_TEX_COLOR);
          BufferBuilder buffer = Tessellator.getInstance().begin(DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
-         Color themeColor = WildClient.INSTANCE.getThemeManager().getTheme().color();
-         buffer.vertex(matrix, 0.0F, 1.5F, 0.0F).texture(0.0F, 1.0F).color(themeColor.getRGB());
-         buffer.vertex(matrix, 1.5F, 1.5F, 0.0F).texture(1.0F, 1.0F).color(themeColor.getRGB());
-         buffer.vertex(matrix, 1.5F, 0.0F, 0.0F).texture(1.0F, 0.0F).color(themeColor.getRGB());
-         buffer.vertex(matrix, 0.0F, 0.0F, 0.0F).texture(0.0F, 0.0F).color(themeColor.getRGB());
+         
+         int color;
+         switch (this.colorMode) {
+            case "Black" -> color = Color.BLACK.getRGB();
+            case "Black-White" -> {
+                float pulse = (float) (Math.sin(System.currentTimeMillis() / 400.0) + 1.0) / 2.0F;
+                int gray = (int) (pulse * 255);
+                color = new Color(gray, gray, gray).getRGB();
+            }
+            default -> color = Color.WHITE.getRGB();
+         }
+         
+         buffer.vertex(matrix, 0.0F, 1.5F, 0.0F).texture(0.0F, 1.0F).color(color);
+         buffer.vertex(matrix, 1.5F, 1.5F, 0.0F).texture(1.0F, 1.0F).color(color);
+         buffer.vertex(matrix, 1.5F, 0.0F, 0.0F).texture(1.0F, 0.0F).color(color);
+         buffer.vertex(matrix, 0.0F, 0.0F, 0.0F).texture(0.0F, 0.0F).color(color);
          BufferRenderer.drawWithGlobalProgram(buffer.end());
          RenderSystem.enableCull();
          RenderSystem.enableDepthTest();

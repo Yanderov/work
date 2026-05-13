@@ -5,6 +5,7 @@ import dev.client.managers.FontManager;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
 import dev.client.modules.impl.render.GuiModule;
+import dev.client.modules.impl.render.Interface;
 import dev.client.modules.settings.impl.FloatSetting;
 import dev.client.ui.gui.elements.CategoryElement;
 import dev.client.ui.gui.elements.ModuleElement;
@@ -142,6 +143,23 @@ public class Gui extends Screen {
       AbstractTexture abstractTexture = MinecraftClient.getInstance().getTextureManager().getTexture(Identifier.of("wild", "images/gui/avatar.png"));
       BuiltTexture texture = (BuiltTexture)Builder.texture().size(new SizeState(25.0F, 25.0F)).radius(new QuadRadiusState(12.0F)).texture(0.0F, 0.0F, 1.0F, 1.0F, abstractTexture).color(new QuadColorState(white)).build();
       texture.render(matrix4f, (float)(this.x + 5.0D + 22.5D - 12.5D), (float)(this.y + this.heightGui - 42.0D), 0.0F);
+
+      // Selectable Picture Feature - Rendered in screen corner
+      Interface iface = WildClient.INSTANCE.getModuleManager().getByClass(Interface.class);
+      if (iface.isEnabled() && iface.getElements().getValueByName("Picture")) {
+          String picMode = iface.picture.getValue().toLowerCase();
+          AbstractTexture picTex = MinecraftClient.getInstance().getTextureManager().getTexture(Identifier.of("wild", "images/gui/" + picMode + ".png"));
+          
+          float picSize = 250.0F; // Much larger
+          float screenWidth = (float)context.getScaledWindowWidth();
+          float screenHeight = (float)context.getScaledWindowHeight();
+          
+          BuiltTexture pic = (BuiltTexture)Builder.texture().size(new SizeState(picSize, picSize)).radius(new QuadRadiusState(0.0F)).texture(0.0F, 0.0F, 1.0F, 1.0F, picTex).color(new QuadColorState(ColorUtil.setAlpha(this.animation.getOutput(), Color.WHITE))).build();
+          
+          // Render at absolute bottom right of the screen
+          pic.render(matrix4f, screenWidth - picSize, screenHeight - picSize, 0.0F);
+      }
+
       this.offsetX = 0.0D;
       this.offsetY = 0.0D;
       this.offsetY2 = 0.0D;
@@ -219,19 +237,6 @@ public class Gui extends Screen {
       this.key = 0;
       this.type = "";
       this.click = -1;
-   }
-
-   private void themeButton(double x, double y, double width, double height, double mouseX, double mouseY, Theme theme, Matrix4f matrix) {
-      BuiltRectangle rectangle = Builder.rectangle().size(new SizeState(width, height)).color(new QuadColorState(ColorUtil.setAlpha(this.animation.getOutput(), new Color(0, 0, 0, 3)))).radius(new QuadRadiusState(3.0F)).smoothness(1.15F).build();
-      rectangle.render(matrix, x, y);
-      BuiltBorder border = (BuiltBorder)Builder.border().size(new SizeState(width, height)).color(new QuadColorState(ColorUtil.setAlpha(this.animation.getOutput(), new Color(0, 0, 0, 5)))).radius(new QuadRadiusState(4.0F)).thickness(0.01F).smoothness(0.6F, 0.6F).build();
-      border.render(matrix, x, y);
-      rectangle = Builder.rectangle().size(new SizeState(width * 0.7, height * 0.7)).color(new QuadColorState(ColorUtil.setAlpha(this.animation.getOutput(), theme.color()))).radius(new QuadRadiusState(4.0F)).smoothness(1.15F).build();
-      rectangle.render(matrix, x + width * 0.15, y + height * 0.15);
-      if (MouseUtil.isHovered(x, y, width, height, mouseX, mouseY) && this.click == 0) {
-         WildClient.INSTANCE.getThemeManager().setTheme(theme);
-      }
-
    }
 
    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {

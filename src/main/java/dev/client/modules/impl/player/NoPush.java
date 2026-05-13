@@ -4,7 +4,7 @@ import dev.client.event.classes.ReceivePacketEvent;
 import dev.client.event.interfaces.IReceivePacketable;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.BooleanSetting;
 import dev.client.modules.settings.impl.MultiBoxSetting;
 import dev.client.util.IUtil;
@@ -20,7 +20,7 @@ public class NoPush extends Module implements IReceivePacketable, IUtil {
    public final MultiBoxSetting options = new MultiBoxSetting().name("Options").booleanSettings(new BooleanSetting().name("Water").value(false), new BooleanSetting().name("Players").value(false), new BooleanSetting().name("Blocks").value(false), new BooleanSetting().name("FishingHook").value(false));
 
    public NoPush() {
-      super(new PlayerModel("NoPush", Category.PLAYER, "Убирает отталкивание игрока от выбранных объектов"));
+      super(new ModuleBranding("NoPush", Category.PLAYER, "Убирает отталкивание игрока от выбранных объектов"));
       this.addSetting(this.options);
    }
 

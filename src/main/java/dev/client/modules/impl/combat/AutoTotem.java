@@ -7,7 +7,7 @@ import dev.client.event.interfaces.ITickable;
 import dev.client.modules.Category;
 import dev.client.modules.IDisableable;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.BooleanSetting;
 import dev.client.modules.settings.impl.FloatSetting;
 import dev.client.modules.settings.impl.MultiBoxSetting;
@@ -94,7 +94,7 @@ public class AutoTotem extends Module implements ITickable, IReceivePacketable, 
    }
 
    public AutoTotem() {
-      super(new PlayerModel("AutoTotem", Category.COMBAT, "Берет тотем во вторую руку при необходимости"));
+      super(new ModuleBranding("AutoTotem", Category.COMBAT, "Берет тотем во вторую руку при необходимости"));
       this.phase = AutoTotem.Phase.READY;
       this.backItemStack = ItemStack.EMPTY;
       this.oldSlot = -1;

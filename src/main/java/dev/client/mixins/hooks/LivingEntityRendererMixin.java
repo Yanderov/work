@@ -4,7 +4,6 @@ import com.llamalad7.mixinextras.sugar.Local;
 import dev.client.WildClient;
 import dev.client.event.classes.EntityColorEvent;
 import dev.client.modules.impl.render.PlayerEsp;
-import dev.client.modules.impl.render.CustomModel;
 import dev.client.util.color.ColorUtil;
 import dev.client.util.render.esp.ChamsRenderer;
 import dev.client.util.render.esp.FlatEspLayer;
@@ -69,17 +68,7 @@ public abstract class LivingEntityRendererMixin {
       }
 
       PlayerEsp playerEsp = WildClient.INSTANCE.getModuleManager().getByClass(PlayerEsp.class);
-      CustomModel customModel = WildClient.INSTANCE.getModuleManager().getByClass(CustomModel.class);
       int themeColor = WildClient.INSTANCE.getThemeManager().getTheme().color().getRGB();
-      
-      boolean isPlayer = renderState instanceof PlayerEntityRenderState;
-      boolean isFirstPerson = MinecraftClient.getInstance().options.getPerspective().isFirstPerson();
-      
-      if (isPlayer && customModel.isEnabled() && ((PlayerEntityRenderState)renderState).name.equals(MinecraftClient.getInstance().player.getName().getString())) {
-          if (isFirstPerson) {
-              return;
-          }
-      }
 
       if (playerEsp.chamsMode.is("Glass") && playerEsp.options.getValueByName("Chams") && playerEsp.isEnabled() && renderState instanceof PlayerEntityRenderState playerState) {
          ;

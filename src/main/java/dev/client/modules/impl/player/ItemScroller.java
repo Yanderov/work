@@ -6,7 +6,7 @@ import dev.client.event.interfaces.IClickSlotable;
 import dev.client.event.interfaces.IHandledScreen;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.FloatSetting;
 import dev.client.util.IUtil;
 import dev.client.util.math.TimerUtil;
@@ -27,7 +27,7 @@ public class ItemScroller extends Module implements IUtil, IClickSlotable, IHand
    private final TimerUtil timerUtil = new TimerUtil();
 
    public ItemScroller() {
-      super(new PlayerModel("ItemScroller", Category.PLAYER, "Убирает необходимость нажатия на каждый предмет для его перемещения"));
+      super(new ModuleBranding("ItemScroller", Category.PLAYER, "Убирает необходимость нажатия на каждый предмет для его перемещения"));
       this.addSetting(this.delay);
    }
 

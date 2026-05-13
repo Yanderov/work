@@ -8,7 +8,7 @@ import dev.client.event.interfaces.ITickable;
 import dev.client.modules.Category;
 import dev.client.modules.IEnableable;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.Mode;
 import dev.client.modules.settings.impl.ModeSetting;
 import dev.client.util.IUtil;
@@ -33,7 +33,7 @@ public class AutoDuel extends Module implements ITickable, IEnableable, IReceive
    private final TimerUtil stateTimer;
 
    public AutoDuel() {
-      super(new PlayerModel("AutoDuel", Category.UTIL, "Отправляет выбранные дуэли случайным противникам"));
+      super(new ModuleBranding("AutoDuel", Category.UTIL, "Отправляет выбранные дуэли случайным противникам"));
       this.state = AutoDuel.State.IDLE;
       this.stateTimer = new TimerUtil();
       this.addSetting(this.mode);

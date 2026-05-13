@@ -11,8 +11,9 @@ import dev.client.event.interfaces.IRenderable3D;
 import dev.client.managers.FontManager;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.BooleanSetting;
+import dev.client.modules.settings.impl.ColorSetting;
 import dev.client.modules.settings.impl.MultiBoxSetting;
 import dev.client.util.IUtil;
 import dev.client.util.render.ProjectionUtil;
@@ -50,13 +51,14 @@ import org.lwjgl.opengl.GL11;
 @Environment(EnvType.CLIENT)
 public class ItemEsp extends Module implements IRenderable3D, IRenderable2D, IUtil {
    private final MultiBoxSetting elements = new MultiBoxSetting().name("Elements").booleanSettings(new BooleanSetting().name("NameTag").value(false), new BooleanSetting().name("Box").value(false));
+   private final ColorSetting color = new ColorSetting().name("Color").color(new Color(255, 255, 255, 255));
    private static final double EXPAND = 0.02;
    private final List<ItemData> visibleItems = new ArrayList<>();
    private final HashMap<Integer, Float> smoothWidths = new HashMap<>();
 
    public ItemEsp() {
-      super(new PlayerModel("ItemEsp", Category.RENDER, "Показывает предметы на земле"));
-      this.addSetting(this.elements);
+      super(new ModuleBranding("ItemEsp", Category.RENDER, "Показывает предметы на земле"));
+      this.addSetting(this.elements, this.color);
    }
 
    public void onRender3D(Render3DEvent event) {
@@ -80,7 +82,7 @@ public class ItemEsp extends Module implements IRenderable3D, IRenderable2D, IUt
                this.smoothWidths.keySet().retainAll(alive);
             }
 
-            int themeColor = WildClient.INSTANCE.getThemeManager().getTheme().color().getRGB();
+            int themeColor = this.color.getColor().getRGB();
             float tr = (float)(themeColor >> 16 & 255) / 255.0F;
             float tg = (float)(themeColor >> 8 & 255) / 255.0F;
             float tb = (float)(themeColor & 255) / 255.0F;
@@ -159,7 +161,7 @@ public class ItemEsp extends Module implements IRenderable3D, IRenderable2D, IUt
          if (this.elements.getValueByName("NameTag")) {
             if (!this.visibleItems.isEmpty()) {
                Matrix4f matrix = event.getDrawContext().getMatrices().peek().getPositionMatrix();
-               Color themeColor = new Color(WildClient.INSTANCE.getThemeManager().getTheme().color().getRGB());
+               Color themeColor = this.color.getColor();
 
                for(ItemData d : this.visibleItems) {
                   Vector2f screen = ProjectionUtil.project(d.worldX, d.worldY, d.worldZ);

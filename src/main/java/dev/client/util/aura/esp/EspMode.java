@@ -7,5 +7,11 @@ import net.minecraft.entity.Entity;
 
 @Environment(EnvType.CLIENT)
 public abstract class EspMode {
+   protected String colorMode = "White";
+
    public abstract void render(Entity entity, MatrixStack matrices);
+
+   public void setColorMode(String colorMode) {
+      this.colorMode = colorMode;
+   }
 }

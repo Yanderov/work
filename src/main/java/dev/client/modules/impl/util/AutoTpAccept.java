@@ -5,7 +5,7 @@ import dev.client.event.classes.ReceivePacketEvent;
 import dev.client.event.interfaces.IReceivePacketable;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.BooleanSetting;
 import dev.client.util.IUtil;
 import dev.client.util.other.Friend;
@@ -20,7 +20,7 @@ public class AutoTpAccept extends Module implements IReceivePacketable, IUtil {
    private final BooleanSetting onlyFriends = new BooleanSetting().name("Only Friends").value(false);
 
    public AutoTpAccept() {
-      super(new PlayerModel("AutoTpAccept", Category.UTIL, "Принимает запросы на телепортацию"));
+      super(new ModuleBranding("AutoTpAccept", Category.UTIL, "Принимает запросы на телепортацию"));
       this.addSetting(this.onlyFriends);
    }
 

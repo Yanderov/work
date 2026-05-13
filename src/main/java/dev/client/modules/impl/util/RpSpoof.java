@@ -4,7 +4,7 @@ import dev.client.event.classes.ReceivePacketEvent;
 import dev.client.event.interfaces.IReceivePacketable;
 import dev.client.modules.Category;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.util.IUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -15,7 +15,7 @@ import net.minecraft.network.packet.s2c.common.ResourcePackSendS2CPacket;
 @Environment(EnvType.CLIENT)
 public class RpSpoof extends Module implements IReceivePacketable, IUtil {
    public RpSpoof() {
-      super(new PlayerModel("RpSpoof", Category.UTIL, "Убирает необходимость установки серверного ресурс-пака"));
+      super(new ModuleBranding("RpSpoof", Category.UTIL, "Убирает необходимость установки серверного ресурс-пака"));
    }
 
    public void onReceivePacket(ReceivePacketEvent receivePacketEvent) {

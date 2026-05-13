@@ -12,7 +12,7 @@ import dev.client.event.interfaces.ITickable;
 import dev.client.modules.Category;
 import dev.client.modules.IDisableable;
 import dev.client.modules.Module;
-import dev.client.modules.PlayerModel;
+import dev.client.modules.ModuleBranding;
 import dev.client.modules.settings.impl.FloatSetting;
 import dev.client.util.IUtil;
 import dev.client.util.render.RenderUtil3D;
@@ -44,7 +44,7 @@ public class Nuker extends Module implements IRotateable, IMoveCorrectionable, I
    private boolean updated = false;
 
    public Nuker() {
-      super(new PlayerModel("Nuker", Category.PLAYER, "Ломает блоки вокруг"));
+      super(new ModuleBranding("Nuker", Category.PLAYER, "Ломает блоки вокруг"));
       this.addSetting(this.distanceY, this.distanceXZ);
    }
 
