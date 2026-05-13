@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "wild",
+  "version": "1.0-SNAPSHOT",
+  "name": "Wild",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/wild/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "dev.client.WildClient"
+    ]
+  },
+  "mixins": [
+    "wild.client.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": "\u003e\u003d0.18.4",
+    "fabric": "*",
+    "minecraft": "1.21.4"
+  }
+}

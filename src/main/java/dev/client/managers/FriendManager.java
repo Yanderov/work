@@ -1,0 +1,34 @@
+package dev.client.managers;
+
+import dev.client.util.other.Friend;
+import java.util.ArrayList;
+import java.util.List;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
+@Environment(EnvType.CLIENT)
+public class FriendManager {
+   private final List<Friend> friends = new ArrayList<>();
+
+   public void addFriend(String name) {
+      this.friends.add(new Friend(name));
+   }
+
+   public List<Friend> getFriends() {
+      return this.friends;
+   }
+
+   public boolean isFriend(String name) {
+      for(Friend friend : this.friends) {
+         if (friend.name().equals(name)) {
+            return true;
+         }
+      }
+
+      return false;
+   }
+
+   public void removeFriend(String name) {
+      this.friends.removeIf((friend) -> friend.name().equalsIgnoreCase(name));
+   }
+}
