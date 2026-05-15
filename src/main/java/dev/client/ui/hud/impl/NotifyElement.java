@@ -38,7 +38,7 @@ public class NotifyElement extends HudElement {
          Builder.rectangle().size(new SizeState(notify.getWidth(), 26.0D)).color(new QuadColorState(ColorUtil.setAlpha(notify.getAnimation().getOutput(), new Color(2048202266, true)))).radius(new QuadRadiusState(8.0F)).smoothness(1.15F).build().render(matrix, x, y);
          BuiltRectangle rectangle = Builder.rectangle().size(new SizeState(19.0F, 18.0F)).color(new QuadColorState(clientColor)).radius(new QuadRadiusState(5.0F, 5.0F, 2.0F, 2.0F)).smoothness(1.15F).build();
          rectangle.render(matrix, x + 4.0D, y + 4.0D);
-         BuiltText textRender = (BuiltText)Builder.text().font(FontManager.ICONS.get()).text("I").color(colorWhite).size(10.0F).thickness(0.05F).build();
+         BuiltText textRender = (BuiltText)Builder.text().font(FontManager.ICONS.get()).text("I").color(ColorUtil.setAlpha(notify.getAnimation().getOutput(), Color.black)).size(10.0F).thickness(0.05F).build();
          textRender.render(matrix, x + 9.5D, y + 7.25D);
          Builder.rectangle().size(new SizeState(notify.getWidth() - 30.0D, 18.0D)).color(new QuadColorState(ColorUtil.setAlpha(notify.getAnimation().getOutput(), Color.black))).radius(new QuadRadiusState(2.0F, 2.0F, 5.0F, 5.0F)).smoothness(1.15F).build().render(matrix, x + 26.0D, y + 4.0D);
          textRender = (BuiltText)Builder.text().font(FontManager.SUISSEINTMEDIUM.get()).text(notify.getText()).color(colorWhite).size(7.5F).thickness(0.05F).build();

@@ -30,7 +30,7 @@ public class Interface extends Module implements IHudRenderable {
 
    public Interface() {
       super(new ModuleBranding("Interface", Category.RENDER, "Показывает худ чита"));
-      this.addSetting(this.elements, this.picture);
+      this.addSetting(this.elements, this.picture, this.targetHudElement.getStyleSetting());
       this.setEnabled(true);
    }
 

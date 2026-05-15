@@ -55,7 +55,7 @@ public class TargetHudElement extends HudElement {
    private final ModeSetting style = new ModeSetting()
            .name("Style")
            .value("WildClient")
-           .modes("WildClient", "Compact");
+           .modes("WildClient", "Yanderov", "Compact");
 
    public TargetHudElement() {
       super(new TargetHudDraggable(), "TargetHUD");
@@ -72,6 +72,9 @@ public class TargetHudElement extends HudElement {
       switch (this.style.getValue()) {
          case "WildClient":
             renderWildClientStyle(drawContext);
+            break;
+         case "Yanderov":
+            renderYanderovStyle(drawContext);
             break;
          case "Compact":
             renderCompactStyle(drawContext);
@@ -177,6 +180,116 @@ public class TargetHudElement extends HudElement {
       }
    }
    
+   private void renderYanderovStyle(DrawContext drawContext) {
+      if (this.lastTarget.getEntity() == null && !(MinecraftClient.getInstance().currentScreen instanceof ChatScreen)) return;
+      
+      float scaleAnim = (float) this.animation.getOutput();
+      if (scaleAnim <= 0.0F) return;
+
+      Matrix4f matrix = drawContext.getMatrices().peek().getPositionMatrix();
+      
+      float width = 110.0F;
+      float height = 70.0F;
+      float centerX = (float)this.draggable.x + width / 2.0F;
+      float centerY = (float)this.draggable.y + height / 2.0F;
+      
+      drawContext.getMatrices().push();
+      AnimationUtil.sizeAnimation(drawContext, (double)centerX, (double)centerY, scaleAnim * 1.2);
+      
+      float x = (float)this.draggable.x;
+      float y = (float)this.draggable.y;
+      
+      float headerHeight = 12.2F;
+      float headerPaddingTop = 2.3F;
+      float gap = 0.8F;
+      float headerWidth = 54.0F;
+      float lowerSectionY = y + headerHeight + headerPaddingTop + gap;
+      float headerX = x + (width - headerWidth) / 2.0F;
+      
+      // Header Background
+      Builder.blur().size(new SizeState(headerWidth, headerHeight)).radius(new QuadRadiusState(1.5F, 0.0F, 1.5F, 0.0F)).blurRadius(12.0F).smoothness(1.0F).color(new QuadColorState(new Color(0, 0, 0, 150))).build().render(matrix, headerX, y + headerPaddingTop);
+      Builder.rectangle().size(new SizeState(headerWidth, headerHeight)).color(new QuadColorState(new Color(18, 19, 20, 75))).radius(new QuadRadiusState(3.0F)).smoothness(0.1F).build().render(matrix, headerX, y + headerPaddingTop);
+      
+      // Main Section Background
+      Builder.blur().size(new SizeState(width - 2.0F, 43.6F)).radius(new QuadRadiusState(1.5F)).blurRadius(12.0F).smoothness(1.0F).color(new QuadColorState(new Color(0, 0, 0, 150))).build().render(matrix, x + 1.0F, lowerSectionY);
+      Builder.rectangle().size(new SizeState(width - 2.0F, 42.0F)).color(new QuadColorState(new Color(18, 19, 20, 75))).radius(new QuadRadiusState(1.5F)).smoothness(0.1F).build().render(matrix, x + 1.0F, lowerSectionY);
+      
+      // Name (Info)
+      String name = this.lastTarget.getName();
+      if (this.nameProtect == null) this.nameProtect = (NameProtect)WildClient.INSTANCE.getModuleManager().getByClass(NameProtect.class);
+      name = this.nameProtect.replace(name);
+      float nameWidth = FontManager.SUISSEINTMEDIUM.get().getWidth(name, 6.0F);
+      Builder.text().font(FontManager.SUISSEINTMEDIUM.get()).text(name).color(Color.WHITE).size(6.0F).thickness(0.05F).build().render(matrix, x + width / 2.0F - nameWidth / 2.0F, y + headerPaddingTop + 4.7F);
+      
+      // Face
+      AbstractTexture abstractTexture = MinecraftClient.getInstance().getTextureManager().getTexture(this.lastTarget.getAvatar());
+      float headSize = 25.0F;
+      float headX = x + (width - headSize) / 2.0F;
+      float headY = y + 15 + 4;
+      Builder.texture().size(new SizeState(headSize, headSize)).radius(new QuadRadiusState(3.0F)).texture(0.125F, 0.125F, 0.125F, 0.125F, abstractTexture).color(new QuadColorState(Color.WHITE)).build().render(matrix, headX, headY);
+      
+      // Items
+      if (this.lastTarget.getEntity() instanceof PlayerEntity player) {
+          this.renderYanderovItems(drawContext, (int)x + 5, (int)(y + 19), player, true);
+          this.renderYanderovItems(drawContext, (int)(x + width - 30), (int)(y + 19), player, false);
+      }
+      
+      // Bottom Section (Health bar)
+      float hp = (float) this.lastTarget.getHealth();
+      float maxHp = (float) this.lastTarget.getMaxHealth();
+      float barWidth = width - 10;
+      float barHeight = 4.0F;
+      float barX = x + 5.0F;
+      float barY = y + 55;
+      float targetHealth = hp / maxHp * barWidth;
+      this.health = MathUtil.fast(this.health, targetHealth, 5.0F);
+      
+      Builder.rectangle().size(new SizeState(barWidth, barHeight)).color(new QuadColorState(new Color(50, 50, 50, 150))).radius(new QuadRadiusState(1.0F)).build().render(matrix, barX, barY);
+      Builder.rectangle().size(new SizeState(Math.max(0, this.health), barHeight)).color(new QuadColorState(Color.WHITE)).radius(new QuadRadiusState(1.0F)).build().render(matrix, barX, barY);
+      
+      String hpString = String.format("%.1f HP", hp);
+      Builder.text().font(FontManager.SUISSEINTMEDIUM.get()).text(hpString).color(Color.WHITE).size(5.0F).thickness(0.05F).build().render(matrix, barX, barY + 6);
+      
+      if (MinecraftClient.getInstance().player != null) {
+          boolean winning = MinecraftClient.getInstance().player.getHealth() >= hp;
+          String status = winning ? "WIN" : "LOSE";
+          Color statusColor = winning ? Color.GREEN : Color.RED;
+          float statusX = x + width - FontManager.SUISSEINTMEDIUM.get().getWidth(status, 5.0F) - 5.0F;
+          Builder.text().font(FontManager.SUISSEINTMEDIUM.get()).text(status).color(statusColor).size(5.0F).thickness(0.05F).build().render(matrix, statusX, barY + 6);
+      }
+      
+      drawContext.getMatrices().pop();
+   }
+
+   private void renderYanderovItems(DrawContext drawContext, int x, int y, PlayerEntity player, boolean armor) {
+       MatrixStack matrices = drawContext.getMatrices();
+       ArrayList<ItemStack> items = new ArrayList<>();
+       if (armor) {
+           player.getArmorItems().forEach(items::add);
+           Collections.reverse(items);
+       } else {
+           items.add(player.getMainHandStack());
+           items.add(player.getOffHandStack());
+       }
+
+       int i = 0;
+       for (ItemStack item : items) {
+           if (item.getItem() != Items.AIR) {
+               float itemX = x + (i % 2) * 13;
+               float itemY = y + (i / 2) * 13;
+               
+               Builder.rectangle().size(new SizeState(12.0F, 12.0F)).color(new QuadColorState(new Color(0, 0, 0, 100))).radius(new QuadRadiusState(1.5F)).build().render(matrices.peek().getPositionMatrix(), itemX, itemY);
+               
+               matrices.push();
+               matrices.translate(itemX, itemY, 0);
+               matrices.scale(0.65f, 0.65f, 0.65f);
+               ItemRenderUtil.drawItemAlpha(matrices, item, 0, 0, (float)this.animation.getOutput());
+               matrices.pop();
+           }
+           i++;
+       }
+   }
+
    private void renderCompactStyle(DrawContext drawContext) {
       float width = 100.0F;
       float height = 35.0F;
