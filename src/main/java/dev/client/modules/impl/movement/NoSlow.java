@@ -22,7 +22,7 @@ import net.minecraft.util.Hand;
 
 @Environment(EnvType.CLIENT)
 public class NoSlow extends Module implements IUsingItem, ITickable, IUtil {
-   private ModeSetting mode = new ModeSetting().name("Mode").value("Vanilla").modes("Vanilla", "Grim Old", "GrimAC", "FunTime", "SpookyTime");
+   private ModeSetting mode = new ModeSetting().name("Mode").value("Vanilla").modes("Vanilla", "Grim Old", "GrimAC", "FunTime", "SpookyTime", "ReallyWorld", "MetaHvH");
    private int ticks = 0;
 
    public NoSlow() {
@@ -60,10 +60,14 @@ public class NoSlow extends Module implements IUsingItem, ITickable, IUtil {
                   }
                   break;
                case "SpookyTime":
+               case "ReallyWorld":
                   if ((float)this.ticks > 1.0F && mc.player.getItemUseTime() > 1) {
                      event.cancel();
                      this.ticks = 0;
                   }
+                  break;
+               case "MetaHvH":
+                  event.cancel();
                   break;
             }
          default:
@@ -81,7 +85,7 @@ public class NoSlow extends Module implements IUsingItem, ITickable, IUtil {
    public void onTick(TickEvent event) {
       if (mc.player == null) return;
       
-      if (!mc.player.isUsingItem()) {
+      if (mc.player.getActiveHand() != Hand.MAIN_HAND && mc.player.getActiveHand() != Hand.OFF_HAND) {
          this.ticks = 0;
       } else {
          ++this.ticks;
