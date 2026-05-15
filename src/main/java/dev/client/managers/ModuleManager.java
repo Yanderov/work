@@ -57,6 +57,7 @@ public class ModuleManager {
           new ElytraFix(),
           new ElytraHelper(),
           new ElytraMotion(),
+          new GrimGlide(),
           new InventoryMove(),
           new MoveHelper(),
           new NoJumpDelay(),
