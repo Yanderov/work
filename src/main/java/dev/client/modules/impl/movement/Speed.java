@@ -34,7 +34,7 @@ public class Speed extends Module implements ITickable, IDisableable, IUtil {
    private final ModeSetting mode = new ModeSetting()
            .name("Mode")
            .value("Vanilla")
-           .modes("Vanilla", "Matrix", "Timer", "Sunrise DMG", "NCP", "Boat", "Grim", "HolyWorld", "45Degree");
+           .modes("Vanilla", "Matrix", "Timer", "Sunrise DMG", "NCP", "Boat", "Grim", "HolyWorld", "45Degree", "Collision", "MetaHvH");
    
    public FloatSetting speed = new FloatSetting() {
       public boolean isVisible() {
@@ -42,6 +42,37 @@ public class Speed extends Module implements ITickable, IDisableable, IUtil {
       }
    }.name("Speed").minValue(0.1F).value(0.5F).maxValue(2.0F).incriment(0.01F);
    
+   // Новые настройки из предоставленного файла
+   private final FloatSetting matrixSpeed = new FloatSetting() {
+      public boolean isVisible() {
+         return Speed.this.mode.is("Matrix");
+      }
+   }.name("Matrix Speed").value(0.36F).minValue(0.1F).maxValue(0.7F).incriment(0.01F);
+
+   private final FloatSetting collisionSpeed = new FloatSetting() {
+      public boolean isVisible() {
+         return Speed.this.mode.is("Collision");
+      }
+   }.name("Collision Speed").value(1.1F).minValue(0.5F).maxValue(2.0F).incriment(0.05F);
+
+   private final FloatSetting holySpeed = new FloatSetting() {
+      public boolean isVisible() {
+         return Speed.this.mode.is("HolyWorld");
+      }
+   }.name("Holy Speed").value(1.35F).minValue(1.1F).maxValue(4.0F).incriment(0.05F);
+
+   private final FloatSetting collisionDist = new FloatSetting() {
+      public boolean isVisible() {
+         return Speed.this.mode.is("HolyWorld");
+      }
+   }.name("Collision Dist").value(0.244F).minValue(0.2F).maxValue(0.95F).incriment(0.01F);
+
+   private final BooleanSetting autoJump = new BooleanSetting() {
+      public boolean isVisible() {
+         return Speed.this.mode.is("Matrix") || Speed.this.mode.is("MetaHvH");
+      }
+   }.name("Auto Jump").value(true);
+
    // Настройки для Grim режима
    private final BooleanSetting grimBoost = new BooleanSetting() {
       public boolean isVisible() {
@@ -82,7 +113,12 @@ public class Speed extends Module implements ITickable, IDisableable, IUtil {
       super(new ModuleBranding("Speed", Category.MOVEMENT, "Ускоряет перемещение игрока"));
       this.addSetting(
               this.mode,
+              this.autoJump,
               this.speed,
+              this.matrixSpeed,
+              this.collisionSpeed,
+              this.holySpeed,
+              this.collisionDist,
               this.grimBoost,
               this.grimStrength,
               this.holyLowBoost,
@@ -92,7 +128,7 @@ public class Speed extends Module implements ITickable, IDisableable, IUtil {
    }
 
    public void onTick(TickEvent event) {
-      if (mc.player == null || mc.world == null) return;
+      if (mc.player == null || mc.world == null || mc.player.getAbilities().flying) return;
       
       switch (this.mode.getValue()) {
          case "Vanilla":
@@ -102,8 +138,45 @@ public class Speed extends Module implements ITickable, IDisableable, IUtil {
             break;
             
          case "Matrix":
-            if (MovementUtil.isMove() && mc.player.isOnGround()) {
-               mc.player.jump();
+            if (MovementUtil.isMove()) {
+                if (!mc.player.isGliding() && !mc.player.isTouchingWater() && !mc.player.isSubmergedIn(FluidTags.WATER) && !mc.player.isOnGround()) {
+                    MovementUtil.setStrafe(this.matrixSpeed.getValue());
+                }
+                if (this.autoJump.getValue() && mc.player.isOnGround() && !mc.options.jumpKey.isPressed()) {
+                    mc.player.jump();
+                }
+            }
+            break;
+            
+         case "MetaHvH":
+            if (MovementUtil.isMove()) {
+                float currentSpeed = 0.358f;
+                if (mc.player.hasStatusEffect(StatusEffects.SPEED)) {
+                    int amp = mc.player.getStatusEffect(StatusEffects.SPEED).getAmplifier();
+                    if (amp == 0) {
+                        currentSpeed *= 1.2630f;
+                    } else if (amp == 1) {
+                        currentSpeed *= 1.4530f;
+                    } else if (amp >= 2) {
+                        currentSpeed *= 1.6520f;
+                    }
+                }
+                
+                if (!mc.player.isGliding() && !mc.player.isTouchingWater() && !mc.player.isSubmergedIn(FluidTags.WATER) && !mc.player.isOnGround()) {
+                    MovementUtil.setStrafe(currentSpeed);
+                }
+                if (this.autoJump.getValue() && mc.player.isOnGround() && !mc.options.jumpKey.isPressed()) {
+                    mc.player.jump();
+                }
+            }
+            break;
+
+         case "Collision":
+            if (MovementUtil.isMove()) {
+                boolean canBoost = mc.world.getEntitiesByClass(LivingEntity.class, mc.player.getBoundingBox().expand(0.1D), (e) -> e != mc.player).size() > 0;
+                if (canBoost && !mc.player.isOnGround()) {
+                    mc.player.airStruggle = this.collisionSpeed.getValue() / 10.0F;
+                }
             }
             break;
             
@@ -181,23 +254,34 @@ public class Speed extends Module implements ITickable, IDisableable, IUtil {
             
          case "HolyWorld":
             if (MovementUtil.isMove() && mc.player.isAlive()) {
-               double scanRadius = this.holyScanRadius.getValue();
+               // Новая логика из файла: коллизии через expand и добавление скорости
+               int collisions = 0;
+               if (mc.world.getEntitiesByClass(LivingEntity.class, mc.player.getBoundingBox().expand(this.collisionDist.getValue()), (e) -> e != mc.player).size() > 0) {
+                  collisions++;
+               }
                
-               for(Entity entity : mc.world.getEntities()) {
-                  if (entity != mc.player && (entity instanceof LivingEntity || entity instanceof PassiveEntity) && 
-                      !(entity instanceof ArmorStandEntity) && 
-                      mc.player.getBoundingBox().expand(scanRadius).intersects(entity.getBoundingBox())) {
-                     
-                     double distanceX = Math.abs(mc.player.getX() - entity.getX());
-                     double distanceZ = Math.abs(mc.player.getZ() - entity.getZ());
-                     
-                     if (distanceX <= 2.1 && distanceZ <= 1.3) {
-                        double entitySpeed = getEntitySpeed(entity);
-                        double boostAmount = entitySpeed < 5.0 ? this.holyLowBoost.getValue() : this.holyHighBoost.getValue();
+               if (collisions > 0) {
+                  double[] motion = MovementUtil.calculateDirection(this.holySpeed.getValue() * 2.05D * 0.01D * collisions);
+                  mc.player.addVelocity(motion[0], 0.0, motion[1]);
+               } else {
+                  // Старая логика как запасная или если нет прямых коллизий
+                  double scanRadius = this.holyScanRadius.getValue();
+                  for(Entity entity : mc.world.getEntities()) {
+                     if (entity != mc.player && (entity instanceof LivingEntity || entity instanceof PassiveEntity) && 
+                         !(entity instanceof ArmorStandEntity) && 
+                         mc.player.getBoundingBox().expand(scanRadius).intersects(entity.getBoundingBox())) {
                         
-                        double[] motion = MovementUtil.calculateDirection(boostAmount);
-                        mc.player.addVelocity(motion[0], 0.0, motion[1]);
-                        break;
+                        double distanceX = Math.abs(mc.player.getX() - entity.getX());
+                        double distanceZ = Math.abs(mc.player.getZ() - entity.getZ());
+                        
+                        if (distanceX <= 2.1 && distanceZ <= 1.3) {
+                           double entitySpeed = getEntitySpeed(entity);
+                           double boostAmount = entitySpeed < 5.0 ? this.holyLowBoost.getValue() : this.holyHighBoost.getValue();
+                           
+                           double[] motion2 = MovementUtil.calculateDirection(boostAmount);
+                           mc.player.addVelocity(motion2[0], 0.0, motion2[1]);
+                           break;
+                        }
                      }
                   }
                }
