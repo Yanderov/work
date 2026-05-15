@@ -55,7 +55,7 @@ public class TargetHudElement extends HudElement {
    private final ModeSetting style = new ModeSetting()
            .name("Style")
            .value("WildClient")
-           .modes("WildClient", "Yanderov", "Compact");
+           .modes("WildClient", "Compact");
 
    public TargetHudElement() {
       super(new TargetHudDraggable(), "TargetHUD");
@@ -72,9 +72,6 @@ public class TargetHudElement extends HudElement {
       switch (this.style.getValue()) {
          case "WildClient":
             renderWildClientStyle(drawContext);
-            break;
-         case "Yanderov":
-            renderYanderovStyle(drawContext);
             break;
          case "Compact":
             renderCompactStyle(drawContext);
@@ -176,73 +173,6 @@ public class TargetHudElement extends HudElement {
             }
          }
 
-         this.health = MathUtil.fast(this.health, (float)(this.lastTarget.getHealth() / this.lastTarget.getMaxHealth()), 5.0F);
-      }
-   }
-   
-   private void renderYanderovStyle(DrawContext drawContext) {
-      float width = 110.0F;
-      float height = 60.0F;
-      
-      if (this.nameProtect == null) {
-         this.nameProtect = (NameProtect)WildClient.INSTANCE.getModuleManager().getByClass(NameProtect.class);
-      }
-
-      Matrix4f matrix = drawContext.getMatrices().peek().getPositionMatrix();
-      Color white = ColorUtil.setAlpha(this.animation.getOutput(), Color.WHITE);
-      Color darkBg = ColorUtil.setAlpha(this.animation.getOutput(), new Color(18, 19, 20, 200));
-      Color lightBg = ColorUtil.setAlpha(this.animation.getOutput(), new Color(33, 33, 33, 200));
-      
-      if (!this.animation.finished(Direction.BACKWARDS)) {
-         // Фон с блюром
-         BuiltBlur blur = Builder.blur().size(new SizeState(width, height)).radius(new QuadRadiusState(5.0F)).blurRadius((float)(10.0D * this.animation.getOutput())).smoothness((float)(1.0D * this.animation.getOutput())).color(new QuadColorState(Color.white)).build();
-         blur.render(matrix, (float)this.draggable.x, (float)this.draggable.y);
-         
-         // Основной фон
-         BuiltRectangle rectangle = Builder.rectangle().size(new SizeState(width, height)).color(new QuadColorState(darkBg)).radius(new QuadRadiusState(5.0F)).smoothness(1.15F).build();
-         rectangle.render(matrix, (float)this.draggable.x, (float)this.draggable.y);
-         
-         // Верхняя панель с именем
-         rectangle = Builder.rectangle().size(new SizeState(width - 10, 15.0F)).color(new QuadColorState(lightBg)).radius(new QuadRadiusState(3.0F)).smoothness(1.15F).build();
-         rectangle.render(matrix, (float)(this.draggable.x + 5), (float)(this.draggable.y + 5));
-         
-         // Имя игрока
-         BuiltText nameText = Builder.text().font(FontManager.SUISSEINTMEDIUM.get()).text(this.nameProtect.replace(this.lastTarget.getName())).color(white).size(7.0F).thickness(0.05F).build();
-         nameText.render(matrix, (float)(this.draggable.x + 10), (float)(this.draggable.y + 10));
-         
-         // Аватар
-         AbstractTexture abstractTexture = MinecraftClient.getInstance().getTextureManager().getTexture(this.lastTarget.getAvatar());
-         if (this.lastTarget.isPlayer()) {
-            BuiltTexture texture = Builder.texture().size(new SizeState(25.0F, 25.0F)).radius(new QuadRadiusState(3.0F)).texture(0.125F, 0.125F, 0.125F, 0.125F, abstractTexture).color(new QuadColorState(white)).build();
-            texture.render(matrix, (float)(this.draggable.x + width / 2 - 12.5F), (float)(this.draggable.y + 23));
-         }
-         
-         // Полоска здоровья
-         float barWidth = width - 20;
-         float barHeight = 4.0F;
-         float barX = this.draggable.x + 10;
-         float barY = this.draggable.y + height - 10;
-         
-         rectangle = Builder.rectangle().size(new SizeState(barWidth, barHeight)).color(new QuadColorState(ColorUtil.setAlpha(this.animation.getOutput(), new Color(50, 50, 50, 255)))).radius(new QuadRadiusState(2.0F)).smoothness(1.15F).build();
-         rectangle.render(matrix, barX, barY);
-         
-         rectangle = Builder.rectangle().size(new SizeState(barWidth * (this.health > 1.0F ? 1.0F : this.health), barHeight)).color(new QuadColorState(white)).radius(new QuadRadiusState(2.0F)).smoothness(1.15F).build();
-         rectangle.render(matrix, barX, barY);
-         
-         // HP текст
-         double healthValue = (double)this.health * this.lastTarget.getMaxHealth();
-         BuiltText hpText = Builder.text().font(FontManager.SUISSEINTMEDIUM.get()).text(String.format("%.1f HP", healthValue)).color(white).size(6.0F).thickness(0.05F).build();
-         hpText.render(matrix, barX, barY - 8);
-         
-         // WIN/LOSE статус
-         if (MinecraftClient.getInstance().player != null) {
-            boolean winning = MinecraftClient.getInstance().player.getHealth() >= this.lastTarget.getHealth();
-            String status = winning ? "WIN" : "LOSE";
-            Color statusColor = ColorUtil.setAlpha(this.animation.getOutput(), winning ? new Color(0, 255, 0) : new Color(255, 0, 0));
-            BuiltText statusText = Builder.text().font(FontManager.SUISSEINTMEDIUM.get()).text(status).color(statusColor).size(6.0F).thickness(0.05F).build();
-            statusText.render(matrix, barX + barWidth - 20, barY - 8);
-         }
-         
          this.health = MathUtil.fast(this.health, (float)(this.lastTarget.getHealth() / this.lastTarget.getMaxHealth()), 5.0F);
       }
    }

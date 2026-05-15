@@ -7,7 +7,6 @@ import dev.client.modules.impl.movement.*;
 import dev.client.modules.impl.player.*;
 import dev.client.modules.impl.render.*;
 import dev.client.modules.impl.util.*;
-import dev.client.integration.YanderovClickGuiModule;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -95,7 +94,6 @@ public class ModuleManager {
           new SmoothCamera(),
           new SwingAnimation(),
           new Wings(),
-          new YanderovClickGuiModule(),
           
           // PLAYER (по алфавиту)
           new AHHelper(),

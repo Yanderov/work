@@ -45,24 +45,7 @@ public class YanderovAdapter {
         // YanderovIntegration.getInstance().initialize();
     }
     
-    /**
-     * Открыть ClickGUI Yanderov
-     */
-    public void openClickGui() {
-        if (!initialized) {
-            System.out.println("[YanderovAdapter] Yanderov not initialized, cannot open ClickGUI");
-            return;
-        }
-        
-        try {
-            // MenuScreen.INSTANCE.openGui();
-            System.out.println("[YanderovAdapter] Opening Yanderov ClickGUI...");
-        } catch (Exception e) {
-            System.err.println("[YanderovAdapter] Failed to open ClickGUI: " + e.getMessage());
-        }
-    }
-    
     public boolean isInitialized() {
         return initialized;
     }
-}
+    }
