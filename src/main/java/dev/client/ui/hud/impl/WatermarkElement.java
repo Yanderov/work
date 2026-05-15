@@ -34,7 +34,6 @@ public class WatermarkElement extends HudElement implements IUtil {
    public void render(DrawContext drawContext) {
       String clientName = "YanderovClient";
       String fps = MinecraftClient.getInstance().getCurrentFps() + "fps";
-      String time = java.time.LocalTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss"));
       
       // BPS Calculation & Smoothing
       double deltaX = mc.player.getX() - mc.player.prevX;
@@ -48,20 +47,19 @@ public class WatermarkElement extends HudElement implements IUtil {
       String bps = String.format("%.2f bps", smoothedBps);
 
       float size = 7.5F;
-      float width = 115.0F + FontManager.SUISSEINTMEDIUM.get().getWidth(fps, size) 
+      float width = 95.0F + FontManager.SUISSEINTMEDIUM.get().getWidth(fps, size) 
                           + FontManager.SUISSEINTMEDIUM.get().getWidth(clientName, size) 
-                          + FontManager.SUISSEINTMEDIUM.get().getWidth(bps, size)
-                          + FontManager.SUISSEINTMEDIUM.get().getWidth(time, size);
+                          + FontManager.SUISSEINTMEDIUM.get().getWidth(bps, size);
                              
       this.draggable.setHeight(26);
       this.draggable.setWeight((int)width);
       Matrix4f matrix = drawContext.getMatrices().peek().getPositionMatrix();
       
-      BuiltRectangle rectangle = Builder.rectangle().size(new SizeState(width, 26.0F)).color(new QuadColorState(Color.black)).radius(new QuadRadiusState(8.0F)).smoothness(1.15F).build();
+      BuiltRectangle rectangle = Builder.rectangle().size(new SizeState(width, 26.0F)).color(new QuadColorState(Color.black)).radius(new QuadRadiusState(8.0F)).smoothness(1.0F).build();
       rectangle.render(matrix, (float)this.draggable.x, (float)this.draggable.y);
       
       // Box for Logo
-      rectangle = Builder.rectangle().size(new SizeState(19.0F, 18.0F)).color(new QuadColorState(new Color(255, 255, 255, 30))).radius(new QuadRadiusState(5.0F)).smoothness(1.15F).build();
+      rectangle = Builder.rectangle().size(new SizeState(19.0F, 18.0F)).color(new QuadColorState(new Color(255, 255, 255, 30))).radius(new QuadRadiusState(5.0F)).smoothness(1.0F).build();
       rectangle.render(matrix, (float)(this.draggable.x + 4), (float)(this.draggable.y + 4));
       
       AbstractTexture logoTex = MinecraftClient.getInstance().getTextureManager().getTexture(Identifier.of("wild", "images/gui/rightlogo.png"));
@@ -69,33 +67,25 @@ public class WatermarkElement extends HudElement implements IUtil {
       logo.render(matrix, (float)(this.draggable.x + 6.5), (float)(this.draggable.y + 6.0), 0.0F);
 
       float widthName = FontManager.SUISSEINTMEDIUM.get().getWidth(clientName, size) + 25.0F;
-      rectangle = Builder.rectangle().size(new SizeState(widthName, 18.0F)).color(new QuadColorState(new Color(255, 255, 255, 20))).radius(new QuadRadiusState(3.0F)).smoothness(1.15F).build();
+      rectangle = Builder.rectangle().size(new SizeState(widthName, 18.0F)).color(new QuadColorState(new Color(255, 255, 255, 20))).radius(new QuadRadiusState(3.0F)).smoothness(1.0F).build();
       rectangle.render(matrix, (float)(this.draggable.x + 25), (float)(this.draggable.y + 4));
       
       BuiltText themeText = (BuiltText)Builder.text().font(FontManager.SUISSEINTMEDIUM.get()).text(clientName).color(Color.WHITE).size(7.5F).thickness(0.05F).build();
       themeText.render(matrix, (float)(this.draggable.x + 30), (float)(this.draggable.y + 8));
       
       float widthFps = FontManager.SUISSEINTMEDIUM.get().getWidth(fps, size) + 23.5F;
-      rectangle = Builder.rectangle().size(new SizeState(widthFps, 18.0F)).color(new QuadColorState(new Color(255, 255, 255, 20))).radius(new QuadRadiusState(3.0F)).smoothness(1.15F).build();
+      rectangle = Builder.rectangle().size(new SizeState(widthFps, 18.0F)).color(new QuadColorState(new Color(255, 255, 255, 20))).radius(new QuadRadiusState(3.0F)).smoothness(1.0F).build();
       rectangle.render(matrix, (float)(this.draggable.x + 27) + widthName, (float)(this.draggable.y + 4));
       
       themeText = (BuiltText)Builder.text().font(FontManager.SUISSEINTMEDIUM.get()).text(fps).color(Color.WHITE).size(7.5F).thickness(0.05F).build();
       themeText.render(matrix, (float)(this.draggable.x + 32) + widthName, (float)(this.draggable.y + 8));
 
-      // BPS Section
+      // BPS Section (last element with rounded corners)
       float widthBps = FontManager.SUISSEINTMEDIUM.get().getWidth(bps, size) + 24.5F;
-      rectangle = Builder.rectangle().size(new SizeState(widthBps, 18.0F)).color(new QuadColorState(new Color(255, 255, 255, 20))).radius(new QuadRadiusState(3.0F)).smoothness(1.15F).build();
+      rectangle = Builder.rectangle().size(new SizeState(widthBps, 18.0F)).color(new QuadColorState(new Color(255, 255, 255, 20))).radius(new QuadRadiusState(3.0F, 3.0F, 5.0F, 5.0F)).smoothness(1.0F).build();
       rectangle.render(matrix, (float)(this.draggable.x + 29) + widthName + widthFps, (float)(this.draggable.y + 4));
 
       themeText = (BuiltText)Builder.text().font(FontManager.SUISSEINTMEDIUM.get()).text(bps).color(Color.WHITE).size(7.5F).thickness(0.05F).build();
       themeText.render(matrix, (float)(this.draggable.x + 34) + widthName + widthFps, (float)(this.draggable.y + 8));
-
-      // Time Section (last element with rounded corners)
-      float widthTime = FontManager.SUISSEINTMEDIUM.get().getWidth(time, size) + 24.5F;
-      rectangle = Builder.rectangle().size(new SizeState(widthTime, 18.0F)).color(new QuadColorState(new Color(255, 255, 255, 20))).radius(new QuadRadiusState(3.0F, 3.0F, 5.0F, 5.0F)).smoothness(1.15F).build();
-      rectangle.render(matrix, (float)(this.draggable.x + 31) + widthName + widthFps + widthBps, (float)(this.draggable.y + 4));
-
-      themeText = (BuiltText)Builder.text().font(FontManager.SUISSEINTMEDIUM.get()).text(time).color(Color.WHITE).size(7.5F).thickness(0.05F).build();
-      themeText.render(matrix, (float)(this.draggable.x + 36) + widthName + widthFps + widthBps, (float)(this.draggable.y + 8));
    }
 }
