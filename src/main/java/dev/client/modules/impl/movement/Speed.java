@@ -34,8 +34,7 @@ public class Speed extends Module implements ITickable, IDisableable, IUtil {
    private final ModeSetting mode = new ModeSetting()
            .name("Mode")
            .value("Vanilla")
-           .modes("Vanilla", "Matrix", "Timer", "Sunrise DMG", "NCP", "Boat", 
-                  "Grim", "HolyWorld", "FunTime One Block", "Meta", "FunSky HVH", "45Degree");
+           .modes("Vanilla", "Matrix", "Timer", "Sunrise DMG", "NCP", "Boat", "Grim", "HolyWorld", "45Degree");
    
    public FloatSetting speed = new FloatSetting() {
       public boolean isVisible() {
@@ -55,61 +54,6 @@ public class Speed extends Module implements ITickable, IDisableable, IUtil {
          return Speed.this.mode.is("Grim") && Speed.this.grimBoost.getValue();
       }
    }.name("Strength").value(1.5F).minValue(1.0F).maxValue(6.0F).incriment(0.1F);
-   
-   // Настройки для Meta режима
-   private final FloatSetting metaSpeed0 = new FloatSetting() {
-      public boolean isVisible() {
-         return Speed.this.mode.is("Meta");
-      }
-   }.name("Speed 0").value(1.0F).minValue(0.1F).maxValue(10.0F).incriment(0.1F);
-   
-   private final FloatSetting metaSpeed1 = new FloatSetting() {
-      public boolean isVisible() {
-         return Speed.this.mode.is("Meta");
-      }
-   }.name("Speed 1").value(1.5F).minValue(0.1F).maxValue(10.0F).incriment(0.1F);
-   
-   private final FloatSetting metaSpeed2 = new FloatSetting() {
-      public boolean isVisible() {
-         return Speed.this.mode.is("Meta");
-      }
-   }.name("Speed 2").value(2.0F).minValue(0.1F).maxValue(10.0F).incriment(0.1F);
-   
-   private final FloatSetting metaSpeed3 = new FloatSetting() {
-      public boolean isVisible() {
-         return Speed.this.mode.is("Meta");
-      }
-   }.name("Speed 3+").value(2.5F).minValue(0.1F).maxValue(10.0F).incriment(0.1F);
-   
-   private final BooleanSetting metaDamageBoost = new BooleanSetting() {
-      public boolean isVisible() {
-         return Speed.this.mode.is("Meta") || Speed.this.mode.is("FunSky HVH");
-      }
-   }.name("DamageBoost").value(true);
-   
-   private final FloatSetting damageBoostDuration = new FloatSetting() {
-      public boolean isVisible() {
-         return (Speed.this.mode.is("Meta") || Speed.this.mode.is("FunSky HVH")) && Speed.this.metaDamageBoost.getValue();
-      }
-   }.name("BoostDuration").value(200.0F).minValue(0.0F).maxValue(1000.0F).incriment(10.0F);
-   
-   private final FloatSetting metaDamageMinSpeed = new FloatSetting() {
-      public boolean isVisible() {
-         return (Speed.this.mode.is("Meta") || Speed.this.mode.is("FunSky HVH")) && Speed.this.metaDamageBoost.getValue();
-      }
-   }.name("MinDamageSpeed").value(1.5F).minValue(0.1F).maxValue(10.0F).incriment(0.1F);
-   
-   private final BooleanSetting metaCollisionBoost = new BooleanSetting() {
-      public boolean isVisible() {
-         return Speed.this.mode.is("Meta");
-      }
-   }.name("CollisionBoost").value(true);
-   
-   private final FloatSetting metaCollisionPower = new FloatSetting() {
-      public boolean isVisible() {
-         return Speed.this.mode.is("Meta") && Speed.this.metaCollisionBoost.getValue();
-      }
-   }.name("CollisionPower").value(0.08F).minValue(0.01F).maxValue(0.5F).incriment(0.01F);
    
    // Настройки для HolyWorld режима
    private final FloatSetting holyLowBoost = new FloatSetting() {
@@ -132,9 +76,6 @@ public class Speed extends Module implements ITickable, IDisableable, IUtil {
    
    // Внутренние переменные
    private final TimerUtil timerUtil = new TimerUtil();
-   private float pendingSpeed = 1.0F;
-   private float boostedSpeed = 1.0F;
-   private long damageBoostEndTime = 0L;
    private final Map<Entity, Vec3d> previousPositions = new HashMap<>();
 
    public Speed() {
@@ -144,15 +85,6 @@ public class Speed extends Module implements ITickable, IDisableable, IUtil {
               this.speed,
               this.grimBoost,
               this.grimStrength,
-              this.metaSpeed0,
-              this.metaSpeed1,
-              this.metaSpeed2,
-              this.metaSpeed3,
-              this.metaDamageBoost,
-              this.damageBoostDuration,
-              this.metaDamageMinSpeed,
-              this.metaCollisionBoost,
-              this.metaCollisionPower,
               this.holyLowBoost,
               this.holyHighBoost,
               this.holyScanRadius
@@ -272,22 +204,6 @@ public class Speed extends Module implements ITickable, IDisableable, IUtil {
             }
             break;
             
-         case "FunTime One Block":
-            if (MovementUtil.isMove() && !mc.player.isTouchingWater() && !mc.player.isInLava() && 
-                !mc.player.isClimbing() && mc.player.getBoundingBox().maxY - mc.player.getBoundingBox().minY < 1.5) {
-               float motion = mc.player.hasStatusEffect(StatusEffects.SPEED) ? 0.32F : 0.28F;
-               MovementUtil.setStrafe(motion);
-            }
-            break;
-            
-         case "Meta":
-            handleMetaSpeed();
-            break;
-            
-         case "FunSky HVH":
-            handleFunSkySpeed();
-            break;
-            
          case "45Degree":
             // 45Degree режим работает через пакеты, логика в onTick минимальна
             if (MovementUtil.isMove()) {
@@ -295,116 +211,6 @@ public class Speed extends Module implements ITickable, IDisableable, IUtil {
             }
             break;
       }
-   }
-   
-   private void handleMetaSpeed() {
-      if (!MovementUtil.isMove()) return;
-      
-      long now = System.currentTimeMillis();
-      int amp = 0;
-      boolean hasSpeed = false;
-      
-      // Проверка эффекта скорости
-      if (mc.player.hasStatusEffect(StatusEffects.SPEED)) {
-         hasSpeed = true;
-         amp = mc.player.getStatusEffect(StatusEffects.SPEED).getAmplifier();
-      }
-      
-      // Выбор базовой скорости в зависимости от уровня эффекта
-      float baseSpeed;
-      if (!hasSpeed) {
-         baseSpeed = this.metaSpeed0.getValue();
-      } else if (amp == 0) {
-         baseSpeed = this.metaSpeed1.getValue();
-      } else if (amp == 1) {
-         baseSpeed = this.metaSpeed2.getValue();
-      } else {
-         baseSpeed = this.metaSpeed3.getValue();
-      }
-      
-      // Damage Boost
-      if (this.metaDamageBoost.getValue()) {
-         if (mc.player.hurtTime >= 1) {
-            long dur = (long)this.damageBoostDuration.getValue();
-            this.damageBoostEndTime = now + dur;
-         }
-         
-         boolean boostActive = mc.player.hurtTime >= 1 || now < this.damageBoostEndTime;
-         if (boostActive) {
-            baseSpeed = Math.max(baseSpeed, this.metaDamageMinSpeed.getValue());
-         }
-      }
-      
-      // Collision Boost
-      if (this.metaCollisionBoost.getValue()) {
-         int collisions = 0;
-         float box = 0.4F;
-         
-         // Усиление при наличии цели в Aura
-         Aura aura = WildClient.INSTANCE.getModuleManager().getByClass(Aura.class);
-         if (aura != null && aura.isEnabled() && aura.getTarget() != null && 
-             aura.getTarget().isAlive() && mc.player.isAlive() && this.grimBoost.getValue()) {
-            box = this.grimStrength.getValue();
-         }
-         
-         for(Entity ent : mc.world.getEntities()) {
-            if (ent != mc.player && !(ent instanceof ArmorStandEntity) && 
-                (ent instanceof LivingEntity || ent instanceof PassiveEntity) && 
-                mc.player.getBoundingBox().expand(box).intersects(ent.getBoundingBox())) {
-               collisions++;
-            }
-         }
-         
-         if (collisions > 0) {
-            baseSpeed += this.metaCollisionPower.getValue() * collisions;
-         }
-      }
-      
-      this.pendingSpeed = baseSpeed;
-      MovementUtil.setStrafe(baseSpeed);
-   }
-   
-   private void handleFunSkySpeed() {
-      if (!MovementUtil.isMove()) return;
-      if (mc.player.isUsingItem() && !mc.player.isTouchingWater()) return;
-      
-      long now = System.currentTimeMillis();
-      int amp = 0;
-      boolean hasSpeed = false;
-      
-      // Проверка эффекта скорости
-      if (mc.player.hasStatusEffect(StatusEffects.SPEED)) {
-         hasSpeed = true;
-         amp = mc.player.getStatusEffect(StatusEffects.SPEED).getAmplifier();
-      }
-      
-      // Выбор базовой скорости
-      float baseSpeed;
-      if (!hasSpeed) {
-         baseSpeed = 0.25F;
-      } else if (amp == 0) {
-         baseSpeed = 0.25F;
-      } else if (amp == 1) {
-         baseSpeed = 0.4F;
-      } else {
-         baseSpeed = 0.56F;
-      }
-      
-      // Damage Boost
-      if (this.metaDamageBoost.getValue()) {
-         if (mc.player.hurtTime >= 1) {
-            long dur = (long)this.damageBoostDuration.getValue();
-            this.damageBoostEndTime = now + dur;
-         }
-         
-         boolean boostActive = mc.player.hurtTime >= 1 || now < this.damageBoostEndTime;
-         if (boostActive) {
-            baseSpeed = Math.max(baseSpeed, this.metaDamageMinSpeed.getValue());
-         }
-      }
-      
-      this.pendingSpeed = baseSpeed;
-      MovementUtil.setStrafe(baseSpeed);
    }
    
    private double getEntitySpeed(Entity entity) {

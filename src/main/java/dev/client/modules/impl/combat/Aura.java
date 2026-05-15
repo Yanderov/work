@@ -72,7 +72,7 @@ import org.joml.Vector2f;
 
 @Environment(EnvType.CLIENT)
 public class Aura extends Module implements ITickable, IRenderable3D, IUtil, ITravelable, IFireworkable, IInputable, ISendPacketable, IEnableable, IRotateable, IMoveCorrectionable, IRenderable2D, IDisableable {
-   private final ModeSetting mode = new ModeSetting().name("Mode").value("ReallyWorld").modes("ReallyWorld", "Snaps", "Normal", "1.8.9", "Aggressive", "FunTime", "Matrix", "SpookyTime", "HolyWorld", "Advanced", "Smooth");
+   private final ModeSetting mode = new ModeSetting().name("Mode").value("ReallyWorld").modes("ReallyWorld", "Normal", "1.8.9", "Aggressive", "Matrix", "SpookyTime", "HolyWorld", "Smooth");
    private final FloatSetting preaim = new FloatSetting().name("PreAim").value(0.5F).minValue(0.0F).maxValue(2.0F).incriment(0.1F);
    private final FloatSetting distance = new FloatSetting().name("Distance").value(3.0F).minValue(3.0F).maxValue(6.0F).incriment(0.1F);
    private final BooleanSetting alwayse = new BooleanSetting() {
@@ -87,21 +87,6 @@ public class Aura extends Module implements ITickable, IRenderable3D, IUtil, ITr
          return Aura.this.clickMode.is("1.8");
       }
    }.name("CPS").value(12.0F).minValue(1.0F).maxValue(20.0F).incriment(0.5F);
-   private final FloatSetting horizontalSpeed = new FloatSetting() {
-      public boolean isVisible() {
-         return Aura.this.mode.is("Advanced");
-      }
-   }.name("HorizontalSpeed").value(4.0F).minValue(0.1F).maxValue(360.0F).incriment(0.1F);
-   private final FloatSetting verticalSpeed = new FloatSetting() {
-      public boolean isVisible() {
-         return Aura.this.mode.is("Advanced");
-      }
-   }.name("VerticalSpeed").value(3.0F).minValue(0.1F).maxValue(360.0F).incriment(0.1F);
-   private final FloatSetting randomization = new FloatSetting() {
-      public boolean isVisible() {
-         return Aura.this.mode.is("Advanced");
-      }
-   }.name("Randomization").value(2.0F).minValue(0.0F).maxValue(10.0F).incriment(0.1F);
    private final FloatSetting hitChance = new FloatSetting().name("HitChance").value(100.0F).minValue(1.0F).maxValue(100.0F).incriment(1.0F);
    private final ModeSetting espMode = new ModeSetting() {
       public void onChangeState(String val) {
@@ -194,7 +179,7 @@ public class Aura extends Module implements ITickable, IRenderable3D, IUtil, ITr
    public Aura() {
       super(new ModuleBranding("Aura", Category.COMBAT, "Атакует противников рядом с игроком"));
       this.curretEspMode = new DefaultMode();
-      this.addSetting(this.mode, this.preaim, this.distance, this.alwayse, this.cooldown, this.clickMode, this.clickCps, this.horizontalSpeed, this.verticalSpeed, this.randomization, this.hitChance, this.espMode, this.markerMode, this.markerColor, this.targets, this.sort, this.correction, this.options, this.offSprintMode, this.smartCrits, this.miniJump, this.autoFireWork, this.fireworkCooldown, this.betterTarget, this.elytraDistance);
+      this.addSetting(this.mode, this.preaim, this.distance, this.alwayse, this.cooldown, this.clickMode, this.clickCps, this.hitChance, this.espMode, this.markerMode, this.markerColor, this.targets, this.sort, this.correction, this.options, this.offSprintMode, this.smartCrits, this.miniJump, this.autoFireWork, this.fireworkCooldown, this.betterTarget, this.elytraDistance);
    }
 
    private String getMode(String mode) {
@@ -414,8 +399,8 @@ public class Aura extends Module implements ITickable, IRenderable3D, IUtil, ITr
                pitch -= (pitch - this.rotate.y) % gcd2;
                this.rotate = new Vector2f(yaw, pitch);
             }
-            case "FunTime", "Matrix" -> {
-               // Плавная ротация с рандомизацией для FunTime/Matrix
+            case "Matrix" -> {
+               // Плавная ротация с рандомизацией для Matrix
                Vec3d targetTorso = this.target.getPos().add(0.0D, (this.target.getHeight() / 2.0F), 0.0D);
                Vec3d eyePos = mc.player.getEyePos();
                Vec3d vec = targetTorso.subtract(eyePos);
@@ -458,37 +443,6 @@ public class Aura extends Module implements ITickable, IRenderable3D, IUtil, ITr
                pitch -= (pitch - this.rotate.y) % gcd;
                this.rotate = new Vector2f(yaw, pitch);
             }
-            case "Advanced" -> {
-               // Продвинутая ротация с настройками
-               Vec3d targetTorso = this.target.getPos().add(0.0D, (this.target.getHeight() / 2.0F), 0.0D);
-               Vec3d eyePos = mc.player.getEyePos();
-               Vec3d vec = targetTorso.subtract(eyePos);
-               float targetYaw = (float)MathHelper.wrapDegrees(Math.toDegrees(Math.atan2(vec.z, vec.x)) - 90.0D);
-               float targetPitch = (float)(-Math.toDegrees(Math.atan2(vec.y, Math.hypot(vec.x, vec.z))));
-               float yawDelta = MathHelper.wrapDegrees(targetYaw - this.rotate.x);
-               float pitchDelta = MathHelper.wrapDegrees(targetPitch - this.rotate.y);
-               
-               float hSpeed = this.horizontalSpeed.getValue();
-               float vSpeed = this.verticalSpeed.getValue();
-               float rand = this.randomization.getValue();
-               
-               float clampedYaw = Math.min(Math.abs(yawDelta), hSpeed);
-               float clampedPitch = Math.min(Math.abs(pitchDelta), vSpeed);
-               
-               float yaw = this.rotate.x + (yawDelta > 0 ? clampedYaw : -clampedYaw);
-               float pitch = MathHelper.clamp(this.rotate.y + (pitchDelta > 0 ? clampedPitch : -clampedPitch), -89.0F, 89.0F);
-               
-               // Рандомизация
-               if (rand > 0) {
-                  yaw += ThreadLocalRandom.current().nextFloat(-rand, rand);
-                  pitch += ThreadLocalRandom.current().nextFloat(-rand / 2, rand / 2);
-               }
-               
-               float gcd = Gcd.getGCD();
-               yaw -= (yaw - this.rotate.x) % gcd;
-               pitch -= (pitch - this.rotate.y) % gcd;
-               this.rotate = new Vector2f(yaw, pitch);
-            }
             case "Smooth" -> {
                // Очень плавная ротация
                Vec3d targetTorso = this.target.getPos().add(0.0D, (this.target.getHeight() / 2.0F), 0.0D);
@@ -507,17 +461,6 @@ public class Aura extends Module implements ITickable, IRenderable3D, IUtil, ITr
                yaw -= (yaw - this.rotate.x) % gcd;
                pitch -= (pitch - this.rotate.y) % gcd;
                this.rotate = new Vector2f(yaw, pitch);
-            }
-            case "Snaps" -> {
-                Vec3d targetTorso = this.target.getPos().add(0.0D, (this.target.getHeight() / 2.0F), 0.0D);
-                Vec3d eyePos = mc.player.getEyePos();
-                Vec3d vec = targetTorso.subtract(eyePos);
-                float yaw = (float)MathHelper.wrapDegrees(Math.toDegrees(Math.atan2(vec.z, vec.x)) - 90.0D);
-                float pitch = (float)(-Math.toDegrees(Math.atan2(vec.y, Math.hypot(vec.x, vec.z))));
-                float gcd = Gcd.getGCD();
-                yaw -= (yaw - this.rotate.x) % gcd;
-                pitch -= (pitch - this.rotate.y) % gcd;
-                this.rotate = new Vector2f(yaw, pitch);
             }
             case "Normal", "1.8.9" -> {
                 Vec3d targetTorso = this.target.getPos().add(0.0D, (this.target.getHeight() / 2.0F), 0.0D);

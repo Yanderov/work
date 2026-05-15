@@ -22,7 +22,7 @@ import net.minecraft.util.Hand;
 
 @Environment(EnvType.CLIENT)
 public class NoSlow extends Module implements IUsingItem, ITickable, IUtil {
-   private ModeSetting mode = new ModeSetting().name("Mode").value("Vanilla").modes("Vanilla", "Grim Old", "ReallyWorld", "GrimAC", "FunTime", "SpookyTime", "MetaHvH");
+   private ModeSetting mode = new ModeSetting().name("Mode").value("Vanilla").modes("Vanilla", "Grim Old", "GrimAC", "FunTime", "SpookyTime");
    private int ticks = 0;
 
    public NoSlow() {
@@ -49,16 +49,6 @@ public class NoSlow extends Module implements IUsingItem, ITickable, IUtil {
                      event.cancel();
                   }
                   break;
-               case "ReallyWorld":
-                  if (mc.player.getActiveHand() == Hand.MAIN_HAND) {
-                     mc.player.networkHandler.sendPacket(new PlayerInteractItemC2SPacket(Hand.OFF_HAND, 0, mc.player.getYaw(), mc.player.getPitch()));
-                     event.cancel();
-                  } else if (mc.player.getActiveHand() == Hand.OFF_HAND) {
-                     mc.player.networkHandler.sendPacket(new UpdateSelectedSlotC2SPacket(mc.player.getInventory().selectedSlot % 8 + 1));
-                     mc.player.networkHandler.sendPacket(new UpdateSelectedSlotC2SPacket(mc.player.getInventory().selectedSlot));
-                     event.cancel();
-                  }
-                  break;
                case "GrimAC":
                   if (mc.player.getActiveHand() == Hand.MAIN_HAND) {
                       mc.player.networkHandler.sendPacket(new PlayerInteractItemC2SPacket(Hand.OFF_HAND, 0, mc.player.getYaw(), mc.player.getPitch()));
@@ -74,9 +64,6 @@ public class NoSlow extends Module implements IUsingItem, ITickable, IUtil {
                      event.cancel();
                      this.ticks = 0;
                   }
-                  break;
-               case "MetaHvH":
-                  event.cancel();
                   break;
             }
          default:

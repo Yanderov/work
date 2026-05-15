@@ -69,6 +69,22 @@ public abstract class LivingEntityRendererMixin {
 
       PlayerEsp playerEsp = WildClient.INSTANCE.getModuleManager().getByClass(PlayerEsp.class);
       int themeColor = WildClient.INSTANCE.getThemeManager().getTheme().color().getRGB();
+      
+      int chamsColor;
+      switch (playerEsp.chamsColorMode.getValue()) {
+         case "Black":
+            chamsColor = Color.black.getRGB();
+            break;
+         case "White":
+            chamsColor = Color.white.getRGB();
+            break;
+         case "Black-White":
+            chamsColor = Color.black.getRGB(); // Base color, Black-White logic handled in adapt
+            break;
+         default:
+            chamsColor = themeColor;
+            break;
+      }
 
       if (playerEsp.chamsMode.is("Glass") && playerEsp.options.getValueByName("Chams") && playerEsp.isEnabled() && renderState instanceof PlayerEntityRenderState playerState) {
          ;
@@ -81,16 +97,30 @@ public abstract class LivingEntityRendererMixin {
             VertexConsumer depthVc = vertexConsumers.getBuffer(FlatEspLayer.FLAT_ESP_DEPTH);
             instance.render(matrixStack, depthVc, i, j, -1);
             VertexConsumer colorVc = vertexConsumers.getBuffer(FlatEspLayer.FLAT_ESP);
-            instance.render(matrixStack, colorVc, 15728880, j, ColorUtil.setAlpha(0.4D, WildClient.INSTANCE.getThemeManager().getTheme().color()).getRGB());
+            
+            int glassCol = chamsColor;
+            if (playerEsp.chamsColorMode.is("Black-White")) {
+               glassCol = Color.black.getRGB();
+            }
+            instance.render(matrixStack, colorVc, 15728880, j, ColorUtil.setAlpha(0.4D, new Color(glassCol, true)).getRGB());
          }
 
          if (playerEsp.chamsMode.is("Flat") && playerEsp.isEnabled() && playerEsp.options.getValueByName("Chams")) {
             VertexConsumer espVc = vertexConsumers.getBuffer(FlatEspLayer.FLAT_ESP);
-            instance.render(matrixStack, espVc, 15728880, j, themeColor);
+            int flatCol = chamsColor;
+            if (playerEsp.chamsColorMode.is("Black-White")) {
+               flatCol = Color.black.getRGB();
+            }
+            instance.render(matrixStack, espVc, 15728880, j, flatCol);
          }
 
          if (playerEsp.isEnabled() && playerEsp.chamsMode.is("New") && playerEsp.options.getValueByName("Chams")) {
-            int[] chams = this.adapt(WildClient.INSTANCE.getThemeManager().getTheme().color().getRGB());
+            int[] chams;
+            if (playerEsp.chamsColorMode.is("Black-White")) {
+               chams = new int[]{0xE0000000, 0x70FFFFFF}; // Black over, White through
+            } else {
+               chams = this.adapt(chamsColor);
+            }
             ChamsRenderer.enqueue(instance, matrixStack, chams);
          }
       }

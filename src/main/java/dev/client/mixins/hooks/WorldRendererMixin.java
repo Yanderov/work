@@ -74,12 +74,24 @@ public class WorldRendererMixin implements IWorldRendererMixin {
       method = {"renderEntities"},
       at = @At(
    value = "INVOKE",
-   target = "Lnet/minecraft/entity/Entity;getTeamColorValue()I"
+   target = "Lnet/minecraft/entity/Entity/getTeamColorValue()I"
 )
    )
    private int redirectTeamColor(Entity entity) {
       PlayerEsp esp = WildClient.INSTANCE.getModuleManager().getByClass(PlayerEsp.class);
-      return esp != null && esp.isEnabled() && esp.options.getValueByName("Chams") && esp.chamsMode.is("Glow") && entity instanceof PlayerEntity ? esp.color.getColor().getRGB() : entity.getTeamColorValue();
+      if (esp != null && esp.isEnabled() && esp.options.getValueByName("Chams") && esp.chamsMode.is("Glow") && entity instanceof PlayerEntity) {
+          switch (esp.chamsColorMode.getValue()) {
+              case "Black":
+                  return Color.black.getRGB();
+              case "White":
+                  return Color.white.getRGB();
+              case "Black-White":
+                  return Color.black.getRGB();
+              default:
+                  return esp.color.getColor().getRGB();
+          }
+      }
+      return entity.getTeamColorValue();
    }
 
    @Inject(

@@ -57,6 +57,11 @@ public class PlayerEsp extends Module implements IRenderable3D, IUtil, IRenderab
          return PlayerEsp.this.options.getValueByName("Chams");
       }
    }.name("Mode").value("New").modes("Glow", "New", "Flat", "Glass", "Skeleton");
+   public final ModeSetting chamsColorMode = new ModeSetting() {
+      public boolean isVisible() {
+         return PlayerEsp.this.options.getValueByName("Chams");
+      }
+   }.name("Chams Color").value("Theme").modes("White", "Black", "Black-White", "Theme");
    public final MultiBoxSetting nametagOptions = new MultiBoxSetting() {
       public boolean isVisible() {
          return PlayerEsp.this.options.getValueByName("Nametag");
@@ -69,7 +74,7 @@ public class PlayerEsp extends Module implements IRenderable3D, IUtil, IRenderab
 
    public PlayerEsp() {
       super(new ModuleBranding("Esp", Category.RENDER, "Показывает информацию о противниках в мире"));
-      this.addSetting(this.options, this.chamsMode, this.nametagOptions, this.color);
+      this.addSetting(this.options, this.chamsMode, this.chamsColorMode, this.nametagOptions, this.color);
    }
 
    public void onRender3D(Render3DEvent event) {
