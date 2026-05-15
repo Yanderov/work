@@ -40,6 +40,7 @@ public class ModuleManager {
           new ElytraAura(),
           new HitBox(),
           new HitSound(),
+          new LegitAura(),
           new NoFriendDamage(),
           new NoInteract(),
           new ShiftTap(),
