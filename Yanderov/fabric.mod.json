@@ -1,0 +1,39 @@
+﻿{
+  "accessWidener": "accesswidener",
+  "schemaVersion": 1,
+  "id": "Yanderov",
+  "version": "1.0",
+  "icon": "assets/minecraft/icon.png",
+  "name": "Yanderov",
+  "description": "Yanderov Client",
+  "authors": [
+    "NoHurt"
+  ],
+  "contact": {
+    "website": "https://Yanderov.fun",
+    "repo": "none"
+  },
+  "license": "All-Rights-Reserved",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "fun.Yanderov.Yanderov"
+    ]
+  },
+  "mixins": [
+    "mixins.json"
+  ],
+  "depends": {
+    "fabricloader": "\u003e\u003d0.16.8",
+    "fabric": "*",
+    "minecraft": "~1.21.4"
+  },
+  "jars": [
+    {
+      "file": "META-INF/jars/netty-codec-socks-4.1.82.Final.jar"
+    },
+    {
+      "file": "META-INF/jars/netty-handler-proxy-4.1.82.Final.jar"
+    }
+  ]
+}

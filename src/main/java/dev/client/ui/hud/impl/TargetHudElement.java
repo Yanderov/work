@@ -5,6 +5,7 @@ import dev.client.managers.FontManager;
 import dev.client.modules.impl.combat.Aura;
 import dev.client.modules.impl.combat.TriggerBot;
 import dev.client.modules.impl.player.NameProtect;
+import dev.client.modules.settings.impl.ModeSetting;
 import dev.client.ui.draggable.impl.TargetHudDraggable;
 import dev.client.ui.hud.HudElement;
 import dev.client.util.animations.Animation;
@@ -49,14 +50,60 @@ public class TargetHudElement extends HudElement {
    private LastTarget lastTarget = new LastTarget();
    float health;
    private NameProtect nameProtect;
+   
+   // Настройка стиля Target HUD
+   private final ModeSetting style = new ModeSetting()
+           .name("Style")
+           .value("WildClient")
+           .modes("WildClient", "Yanderov", "Compact");
 
    public TargetHudElement() {
       super(new TargetHudDraggable(), "TargetHUD");
       this.animation = new EaseBackIn(300, 1.0D, 0.1F, Direction.BACKWARDS);
       this.health = 0.0F;
    }
+   
+   public ModeSetting getStyleSetting() {
+      return this.style;
+   }
 
    public void render(DrawContext drawContext) {
+      // Выбор стиля рендеринга
+      switch (this.style.getValue()) {
+         case "WildClient":
+            renderWildClientStyle(drawContext);
+            break;
+         case "Yanderov":
+            renderYanderovStyle(drawContext);
+            break;
+         case "Compact":
+            renderCompactStyle(drawContext);
+            break;
+      }
+      
+      // Обновление цели
+      if (this.getTarget() != null) {
+         Entity target = this.getTarget();
+         this.animation.setDirection(Direction.FORWARDS);
+         this.lastTarget.setEntity(target);
+         this.lastTarget.update(target);
+         if (target instanceof PlayerEntity) {
+            PlayerEntity player = (PlayerEntity)target;
+            this.lastTarget.setName(player.getName().getString());
+         } else {
+            this.lastTarget.setName(target.getName().getString());
+         }
+
+         if (target instanceof LivingEntity livingEntity) {
+            this.lastTarget.setHealth((double)livingEntity.getHealth());
+            this.lastTarget.setMaxHealth(this.lastTarget.getMaxHealth());
+         }
+      } else {
+         this.animation.setDirection(Direction.BACKWARDS);
+      }
+   }
+   
+   private void renderWildClientStyle(DrawContext drawContext) {
       float width = 130.0F;
       float widthBlack = 76.0F;
       if (this.nameProtect == null) {
@@ -68,6 +115,7 @@ public class TargetHudElement extends HudElement {
       Color white = ColorUtil.setAlpha(this.animation.getOutput(), Color.WHITE);
       Color gray = ColorUtil.setAlpha(this.animation.getOutput(), new Color(2063597567, true));
       Color black = ColorUtil.setAlpha(this.animation.getOutput(), Color.black);
+      
       if (!this.animation.finished(Direction.BACKWARDS)) {
          BuiltBlur blur = Builder.blur().size(new SizeState(width, 50.0F)).radius(new QuadRadiusState(11.0F)).blurRadius((float)(12.0D * this.animation.getOutput())).smoothness((float)(1.0D * this.animation.getOutput())).color(new QuadColorState(Color.white)).build();
          blur.render(matrix, (float)this.draggable.x, (float)this.draggable.y);
@@ -130,27 +178,115 @@ public class TargetHudElement extends HudElement {
 
          this.health = MathUtil.fast(this.health, (float)(this.lastTarget.getHealth() / this.lastTarget.getMaxHealth()), 5.0F);
       }
-
-      if (this.getTarget() != null) {
-         Entity target = this.getTarget();
-         this.animation.setDirection(Direction.FORWARDS);
-         this.lastTarget.setEntity(target);
-         this.lastTarget.update(target);
-         if (target instanceof PlayerEntity) {
-            PlayerEntity player = (PlayerEntity)target;
-            this.lastTarget.setName(player.getName().getString());
-         } else {
-            this.lastTarget.setName(target.getName().getString());
-         }
-
-         if (target instanceof LivingEntity livingEntity) {
-            this.lastTarget.setHealth((double)livingEntity.getHealth());
-            this.lastTarget.setMaxHealth(this.lastTarget.getMaxHealth());
-         }
-      } else {
-         this.animation.setDirection(Direction.BACKWARDS);
+   }
+   
+   private void renderYanderovStyle(DrawContext drawContext) {
+      float width = 110.0F;
+      float height = 60.0F;
+      
+      if (this.nameProtect == null) {
+         this.nameProtect = (NameProtect)WildClient.INSTANCE.getModuleManager().getByClass(NameProtect.class);
       }
 
+      Matrix4f matrix = drawContext.getMatrices().peek().getPositionMatrix();
+      Color white = ColorUtil.setAlpha(this.animation.getOutput(), Color.WHITE);
+      Color darkBg = ColorUtil.setAlpha(this.animation.getOutput(), new Color(18, 19, 20, 200));
+      Color lightBg = ColorUtil.setAlpha(this.animation.getOutput(), new Color(33, 33, 33, 200));
+      
+      if (!this.animation.finished(Direction.BACKWARDS)) {
+         // Фон с блюром
+         BuiltBlur blur = Builder.blur().size(new SizeState(width, height)).radius(new QuadRadiusState(5.0F)).blurRadius((float)(10.0D * this.animation.getOutput())).smoothness((float)(1.0D * this.animation.getOutput())).color(new QuadColorState(Color.white)).build();
+         blur.render(matrix, (float)this.draggable.x, (float)this.draggable.y);
+         
+         // Основной фон
+         BuiltRectangle rectangle = Builder.rectangle().size(new SizeState(width, height)).color(new QuadColorState(darkBg)).radius(new QuadRadiusState(5.0F)).smoothness(1.15F).build();
+         rectangle.render(matrix, (float)this.draggable.x, (float)this.draggable.y);
+         
+         // Верхняя панель с именем
+         rectangle = Builder.rectangle().size(new SizeState(width - 10, 15.0F)).color(new QuadColorState(lightBg)).radius(new QuadRadiusState(3.0F)).smoothness(1.15F).build();
+         rectangle.render(matrix, (float)(this.draggable.x + 5), (float)(this.draggable.y + 5));
+         
+         // Имя игрока
+         BuiltText nameText = Builder.text().font(FontManager.SUISSEINTMEDIUM.get()).text(this.nameProtect.replace(this.lastTarget.getName())).color(white).size(7.0F).thickness(0.05F).build();
+         nameText.render(matrix, (float)(this.draggable.x + 10), (float)(this.draggable.y + 10));
+         
+         // Аватар
+         AbstractTexture abstractTexture = MinecraftClient.getInstance().getTextureManager().getTexture(this.lastTarget.getAvatar());
+         if (this.lastTarget.isPlayer()) {
+            BuiltTexture texture = Builder.texture().size(new SizeState(25.0F, 25.0F)).radius(new QuadRadiusState(3.0F)).texture(0.125F, 0.125F, 0.125F, 0.125F, abstractTexture).color(new QuadColorState(white)).build();
+            texture.render(matrix, (float)(this.draggable.x + width / 2 - 12.5F), (float)(this.draggable.y + 23));
+         }
+         
+         // Полоска здоровья
+         float barWidth = width - 20;
+         float barHeight = 4.0F;
+         float barX = this.draggable.x + 10;
+         float barY = this.draggable.y + height - 10;
+         
+         rectangle = Builder.rectangle().size(new SizeState(barWidth, barHeight)).color(new QuadColorState(ColorUtil.setAlpha(this.animation.getOutput(), new Color(50, 50, 50, 255)))).radius(new QuadRadiusState(2.0F)).smoothness(1.15F).build();
+         rectangle.render(matrix, barX, barY);
+         
+         rectangle = Builder.rectangle().size(new SizeState(barWidth * (this.health > 1.0F ? 1.0F : this.health), barHeight)).color(new QuadColorState(white)).radius(new QuadRadiusState(2.0F)).smoothness(1.15F).build();
+         rectangle.render(matrix, barX, barY);
+         
+         // HP текст
+         double healthValue = (double)this.health * this.lastTarget.getMaxHealth();
+         BuiltText hpText = Builder.text().font(FontManager.SUISSEINTMEDIUM.get()).text(String.format("%.1f HP", healthValue)).color(white).size(6.0F).thickness(0.05F).build();
+         hpText.render(matrix, barX, barY - 8);
+         
+         // WIN/LOSE статус
+         if (MinecraftClient.getInstance().player != null) {
+            boolean winning = MinecraftClient.getInstance().player.getHealth() >= this.lastTarget.getHealth();
+            String status = winning ? "WIN" : "LOSE";
+            Color statusColor = ColorUtil.setAlpha(this.animation.getOutput(), winning ? new Color(0, 255, 0) : new Color(255, 0, 0));
+            BuiltText statusText = Builder.text().font(FontManager.SUISSEINTMEDIUM.get()).text(status).color(statusColor).size(6.0F).thickness(0.05F).build();
+            statusText.render(matrix, barX + barWidth - 20, barY - 8);
+         }
+         
+         this.health = MathUtil.fast(this.health, (float)(this.lastTarget.getHealth() / this.lastTarget.getMaxHealth()), 5.0F);
+      }
+   }
+   
+   private void renderCompactStyle(DrawContext drawContext) {
+      float width = 100.0F;
+      float height = 35.0F;
+      
+      if (this.nameProtect == null) {
+         this.nameProtect = (NameProtect)WildClient.INSTANCE.getModuleManager().getByClass(NameProtect.class);
+      }
+
+      Matrix4f matrix = drawContext.getMatrices().peek().getPositionMatrix();
+      Color white = ColorUtil.setAlpha(this.animation.getOutput(), Color.WHITE);
+      Color darkBg = ColorUtil.setAlpha(this.animation.getOutput(), new Color(0, 0, 0, 150));
+      
+      if (!this.animation.finished(Direction.BACKWARDS)) {
+         // Компактный фон
+         BuiltRectangle rectangle = Builder.rectangle().size(new SizeState(width, height)).color(new QuadColorState(darkBg)).radius(new QuadRadiusState(5.0F)).smoothness(1.15F).build();
+         rectangle.render(matrix, (float)this.draggable.x, (float)this.draggable.y);
+         
+         // Имя
+         BuiltText nameText = Builder.text().font(FontManager.SUISSEINTMEDIUM.get()).text(this.nameProtect.replace(this.lastTarget.getName())).color(white).size(7.0F).thickness(0.05F).build();
+         nameText.render(matrix, (float)(this.draggable.x + 5), (float)(this.draggable.y + 5));
+         
+         // Полоска здоровья
+         float barWidth = width - 10;
+         float barHeight = 3.0F;
+         float barX = this.draggable.x + 5;
+         float barY = this.draggable.y + height - 8;
+         
+         rectangle = Builder.rectangle().size(new SizeState(barWidth, barHeight)).color(new QuadColorState(ColorUtil.setAlpha(this.animation.getOutput(), new Color(50, 50, 50, 255)))).radius(new QuadRadiusState(1.5F)).smoothness(1.15F).build();
+         rectangle.render(matrix, barX, barY);
+         
+         rectangle = Builder.rectangle().size(new SizeState(barWidth * (this.health > 1.0F ? 1.0F : this.health), barHeight)).color(new QuadColorState(white)).radius(new QuadRadiusState(1.5F)).smoothness(1.15F).build();
+         rectangle.render(matrix, barX, barY);
+         
+         // HP
+         double healthValue = (double)this.health * this.lastTarget.getMaxHealth();
+         BuiltText hpText = Builder.text().font(FontManager.SUISSEINTMEDIUM.get()).text(String.format("%.0f", healthValue)).color(white).size(6.0F).thickness(0.05F).build();
+         hpText.render(matrix, barX, barY - 10);
+         
+         this.health = MathUtil.fast(this.health, (float)(this.lastTarget.getHealth() / this.lastTarget.getMaxHealth()), 5.0F);
+      }
    }
 
    void renderItems(DrawContext drawContext, int x, int y, PlayerEntity player, float alpha) {

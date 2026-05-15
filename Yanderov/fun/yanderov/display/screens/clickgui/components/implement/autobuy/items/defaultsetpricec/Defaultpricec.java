@@ -1,0 +1,127 @@
+﻿package fun.Yanderov.display.screens.clickgui.components.implement.autobuy.items.defaultsetpricec;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class Defaultpricec {
+   private static final Map defaultPrices = new HashMap();
+
+   public static int getPrice(String displayName) {
+      return (Integer)defaultPrices.getOrDefault(displayName, 5000);
+   }
+
+   static {
+      defaultPrices.put("ÐÐ»Ð¼Ð°Ð·", 1500);
+      defaultPrices.put("ÐÐ»Ð¼Ð°Ð·Ð½Ð°Ñ Ñ€ÑƒÐ´Ð°", 1000);
+      defaultPrices.put("ÐÐ»Ð¼Ð°Ð·Ð½Ñ‹Ð¹ Ð±Ð»Ð¾Ðº", 11500);
+      defaultPrices.put("Ð‘Ð¸Ñ€ÐºÐ°", 1000);
+      defaultPrices.put("Ð‘Ð»Ð¾Ðº Ð´Ð°Ð¼Ð°Ð³ÐµÑ€", 1000);
+      defaultPrices.put("Ð‘Ð»Ð¾Ðº Ð·Ð¾Ð»Ð¾Ñ‚Ð°", 1500);
+      defaultPrices.put("Ð‘Ð¾Ð¶ÑŒÑ Ð°ÑƒÑ€Ð°", 1000);
+      defaultPrices.put("Ð‘Ð¾Ð¶ÑŒÐµ ÐºÐ°ÑÐ°Ð½Ð¸Ðµ", 1000);
+      defaultPrices.put("Ð‘Ð¾Ñ‚Ð¸Ð½ÐºÐ¸ ÐºÑ€ÑƒÑˆÐ¸Ñ‚ÐµÐ»Ñ", 500000);
+      defaultPrices.put("Ð‘ÑƒÐ»Ð°Ð²Ð°", 100000);
+      defaultPrices.put("Ð‘ÑƒÐ»Ð°Ð²Ð° ÐºÑ€ÑƒÑˆÐ¸Ñ‚ÐµÐ»Ñ", 100000);
+      defaultPrices.put("Ð’ÑÐ¿Ñ‹ÑˆÐºÐ°", 10000);
+      defaultPrices.put("Ð“Ð¾Ð»Ð¾Ð²Ð° Ð²Ð¸Ð·ÐµÑ€-ÑÐºÐµÐ»ÐµÑ‚Ð°", 1000);
+      defaultPrices.put("Ð“Ð¾Ð»Ð¾Ð²Ð° Ð´Ñ€Ð°ÐºÐ¾Ð½Ð°", 1000);
+      defaultPrices.put("Ð“Ð¾Ð»Ð¾Ð²Ð° Ð·Ð¾Ð¼Ð±Ð¸", 1000);
+      defaultPrices.put("Ð“Ð¾Ð»Ð¾Ð²Ð° ÐºÑ€Ð¸Ð¿ÐµÑ€Ð°", 1000);
+      defaultPrices.put("Ð“Ð¾Ð»Ð¾Ð²Ð° Ð¿Ð¸Ð³Ð»Ð¸Ð½Ð°", 1000);
+      defaultPrices.put("Ð“Ð¾Ð»Ð¾Ð²Ð° ÑÐºÐµÐ»ÐµÑ‚Ð°", 1000);
+      defaultPrices.put("Ð”ÐµÐ·Ð¾Ñ€Ð¸ÐµÐ½Ñ‚Ð°Ñ†Ð¸Ñ", 1000);
+      defaultPrices.put("Ð”Ð¸Ð½Ð°Ð¼Ð¸Ñ‚", 1000);
+      defaultPrices.put("Ð”Ñ€Ð°ÐºÐ¾Ð½Ð¸Ð¹ ÑÐºÐ¸Ð½", 1000);
+      defaultPrices.put("Ð–ÐµÐ»ÐµÐ·Ð½Ñ‹Ð¹ Ð±Ð»Ð¾Ðº", 1000);
+      defaultPrices.put("Ð–ÐµÐ»ÐµÐ·Ð½Ñ‹Ð¹ ÑÐ»Ð¸Ñ‚Ð¾Ðº", 1000);
+      defaultPrices.put("Ð—Ð°Ð³Ð°Ð´Ð¾Ñ‡Ð½Ñ‹Ð¹ Ð¼Ð°ÑÐº", 1000);
+      defaultPrices.put("Ð—Ð°Ñ‡Ð°Ñ€Ð¾Ð²Ð°Ð½Ð½Ð¾Ðµ Ð·Ð¾Ð»Ð¾Ñ‚Ð¾Ðµ ÑÐ±Ð»Ð¾ÐºÐ¾", 60000);
+      defaultPrices.put("Ð—Ð²ÐµÐ·Ð´Ð° ÐÐµÐ·ÐµÑ€Ð°", 1000);
+      defaultPrices.put("Ð—ÐµÐ»ÑŒÐµ ÐÐ³ÐµÐ½Ñ‚Ð°", 10000);
+      defaultPrices.put("Ð—ÐµÐ»ÑŒÐµ ÐšÐ¸Ð»Ð»ÐµÑ€Ð°", 10000);
+      defaultPrices.put("Ð—ÐµÐ»ÑŒÐµ ÐœÐµÐ´Ð¸ÐºÐ°", 10000);
+      defaultPrices.put("Ð—ÐµÐ»ÑŒÐµ ÐžÑ‚Ñ€Ñ‹Ð¶ÐºÐ¸", 10000);
+      defaultPrices.put("Ð—ÐµÐ»ÑŒÐµ ÐŸÐ¾Ð±ÐµÐ´Ð¸Ñ‚ÐµÐ»Ñ", 10000);
+      defaultPrices.put("Ð—Ð¾Ð»Ð¾Ñ‚Ð¾Ðµ ÑÐ±Ð»Ð¾ÐºÐ¾", 1000);
+      defaultPrices.put("Ð—Ð¾Ð»Ð¾Ñ‚Ð¾Ð¹ ÑÐ»Ð¸Ñ‚Ð¾Ðº", 1500);
+      defaultPrices.put("Ð˜Ð·ÑƒÐ¼Ñ€ÑƒÐ´Ð½Ð°Ñ Ñ€ÑƒÐ´Ð°", 1000);
+      defaultPrices.put("ÐšÐ¸Ñ€ÐºÐ° ÐºÑ€ÑƒÑˆÐ¸Ñ‚ÐµÐ»Ñ", 1000000);
+      defaultPrices.put("ÐšÐ¸Ñ€ÐºÐ° Ð¼ÐµÐ³Ð°-Ð±ÑƒÐ»ÑŒÐ´Ð¾Ð·ÐµÑ€", 1000);
+      defaultPrices.put("ÐšÐ»ÑŽÑ‡ Ð¸ÑÐ¿Ñ‹Ñ‚Ð°Ð½Ð¸Ð¹", 1000);
+      defaultPrices.put("ÐœÐ°ÑÐº", 1500);
+      defaultPrices.put("ÐœÐµÑ‡ ÐºÑ€ÑƒÑˆÐ¸Ñ‚ÐµÐ»Ñ", 1000000);
+      defaultPrices.put("ÐœÐµÑˆÐ¾Ðº", 10000);
+      defaultPrices.put("ÐœÐ¾Ñ‡Ð° Ð¤Ð»ÐµÑˆÐ°", 10000);
+      defaultPrices.put("ÐÐ°Ð³Ñ€ÑƒÐ´Ð½Ð¸Ðº ÐºÑ€ÑƒÑˆÐ¸Ñ‚ÐµÐ»Ñ", 500000);
+      defaultPrices.put("ÐÐµÐ·ÐµÑ€Ð¸Ñ‚Ð¾Ð²Ñ‹Ð¹ Ð±Ð»Ð¾Ðº", 50000);
+      defaultPrices.put("ÐÐµÐ·ÐµÑ€Ð¸Ñ‚Ð¾Ð²Ñ‹Ð¹ ÑÐ»Ð¸Ñ‚Ð¾Ðº", 50000);
+      defaultPrices.put("ÐÐµÐ·ÐµÑ€Ð¸Ñ‚Ð¾Ð²Ð¾Ðµ ÑƒÐ»ÑƒÑ‡ÑˆÐµÐ½Ð¸Ðµ", 50000);
+      defaultPrices.put("ÐžÐ±ÑÐ¸Ð´Ð¸Ð°Ð½", 1000);
+      defaultPrices.put("ÐžÐ³Ð½ÐµÐ½Ð½Ñ‹Ð¹ ÑÐ¼ÐµÑ€Ñ‡", 20000);
+      defaultPrices.put("ÐžÑ‚Ð¼Ñ‹Ñ‡ÐºÐ° Ðº Ð¡Ñ„ÐµÑ€Ð°Ð¼", 1000);
+      defaultPrices.put("ÐŸÐ°Ð»ÐºÐ° Ð¸Ñ„Ñ€Ð¸Ñ‚Ð°", 1000);
+      defaultPrices.put("ÐŸÐ»Ð°ÑÑ‚", 1000);
+      defaultPrices.put("ÐŸÐ¾Ð½Ð¾Ð¶Ð¸ ÐºÑ€ÑƒÑˆÐ¸Ñ‚ÐµÐ»Ñ", 500000);
+      defaultPrices.put("ÐŸÐ¾Ñ€Ð¾Ñ…", 1000);
+      defaultPrices.put("ÐŸÑ€Ð¾ÐºÐ»ÑÑ‚Ð°Ñ Ð´ÑƒÑˆÐ°", 1000);
+      defaultPrices.put("ÐŸÑƒÐ·Ñ‹Ñ€Ñ‘Ðº Ð¾Ð¿Ñ‹Ñ‚Ð°", 1500);
+      defaultPrices.put("ÐŸÑƒÐ·Ñ‹Ñ€ÐµÐº Ð¾Ð¿Ñ‹Ñ‚Ð° [15 ÑƒÑ€]", 10000);
+      defaultPrices.put("ÐŸÑƒÐ·Ñ‹Ñ€ÐµÐº Ð¾Ð¿Ñ‹Ñ‚Ð° [30 ÑƒÑ€]", 10000);
+      defaultPrices.put("ÐŸÑƒÐ·Ñ‹Ñ€ÐµÐº Ð¾Ð¿Ñ‹Ñ‚Ð° [50 ÑƒÑ€]", 10000);
+      defaultPrices.put("Ð¡ÐµÑ€ÐµÐ±Ñ€Ð¾", 1000);
+      defaultPrices.put("Ð¡ÐµÑ€Ð½Ð°Ñ ÐºÐ¸ÑÐ»Ð¾Ñ‚Ð°", 10000);
+      defaultPrices.put("Ð¡Ð¸Ð³Ð½Ð°Ð»ÑŒÐ½Ñ‹Ð¹ Ð¾Ð³Ð¾Ð½ÑŒ [Ð‘Ð¾Ð³Ð°Ñ‚Ñ‹Ð¹]", 1000);
+      defaultPrices.put("Ð¡Ð¸Ð³Ð½Ð°Ð»ÑŒÐ½Ñ‹Ð¹ Ð¾Ð³Ð¾Ð½ÑŒ [Ð›ÐµÐ³ÐµÐ½Ð´Ð°Ñ€Ð½Ñ‹Ð¹]", 1000);
+      defaultPrices.put("Ð¡Ð¸Ð³Ð½Ð°Ð»ÑŒÐ½Ñ‹Ð¹ Ð¾Ð³Ð¾Ð½ÑŒ [ÐžÐ±Ñ‹Ñ‡Ð½Ñ‹Ð¹]", 1000);
+      defaultPrices.put("Ð¡Ð¸Ð³Ð½Ð°Ð»ÑŒÐ½Ñ‹Ð¹ Ð¾Ð³Ð¾Ð½ÑŒ [Ð¡Ð»ÑƒÑ‡Ð°Ð¹Ð½Ñ‹Ð¹]", 1000);
+      defaultPrices.put("Ð¡Ð½ÐµÐ¶Ð¾Ðº Ð·Ð°Ð¼Ð¾Ñ€Ð¾Ð·ÐºÐ°", 1000);
+      defaultPrices.put("Ð¡Ñ„ÐµÑ€Ð° ÐÐ½Ð´Ñ€Ð¾Ð¼ÐµÐ´Ñ‹", 250000);
+      defaultPrices.put("Ð¡Ñ„ÐµÑ€Ð° ÐÐ¿Ð¾Ð»Ð»Ð¾Ð½Ð°", 250000);
+      defaultPrices.put("Ð¡Ñ„ÐµÑ€Ð° ÐÑÑ‚Ñ€ÐµÑ", 250000);
+      defaultPrices.put("Ð¡Ñ„ÐµÑ€Ð° ÐžÑÐ¸Ñ€Ð¸ÑÐ°", 250000);
+      defaultPrices.put("Ð¡Ñ„ÐµÑ€Ð° ÐŸÐ°Ð½Ð´Ð¾Ñ€Ñ‹", 250000);
+      defaultPrices.put("Ð¡Ñ„ÐµÑ€Ð° Ð¢Ð¸Ñ‚Ð°Ð½Ð°", 250000);
+      defaultPrices.put("Ð¡Ñ„ÐµÑ€Ð° Ð¥Ð¸Ð¼ÐµÑ€Ñ‹", 250000);
+      defaultPrices.put("Ð¡Ð¿Ð°Ð²Ð½ÐµÑ€", 1000000);
+      defaultPrices.put("Ð¢Ð°Ð»Ð¸ÑÐ¼Ð°Ð½ Ð“Ð°Ñ€Ð¼Ð¾Ð½Ð¸Ð¸", 500000);
+      defaultPrices.put("Ð¢Ð°Ð»Ð¸ÑÐ¼Ð°Ð½ Ð“Ñ€Ð°Ð½Ð¸", 500000);
+      defaultPrices.put("Ð¢Ð°Ð»Ð¸ÑÐ¼Ð°Ð½ Ð”ÐµÐ´Ð°Ð»Ð°", 500000);
+      defaultPrices.put("Ð¢Ð°Ð»Ð¸ÑÐ¼Ð°Ð½ Ð•Ñ…Ð¸Ð´Ð½Ñ‹", 500000);
+      defaultPrices.put("Ð¢Ð°Ð»Ð¸ÑÐ¼Ð°Ð½ ÐšÐ°Ñ€Ð°Ñ‚ÐµÐ»Ñ", 1000000);
+      defaultPrices.put("Ð¢Ð°Ð»Ð¸ÑÐ¼Ð°Ð½ ÐšÑ€ÑƒÑˆÐ¸Ñ‚ÐµÐ»Ñ", 1000000);
+      defaultPrices.put("Ð¢Ð°Ð»Ð¸ÑÐ¼Ð°Ð½ Ð¢Ñ€Ð¸Ñ‚Ð¾Ð½Ð°", 500000);
+      defaultPrices.put("Ð¢Ð°Ð»Ð¸ÑÐ¼Ð°Ð½ Ð¤ÐµÐ½Ð¸ÐºÑÐ°", 500000);
+      defaultPrices.put("Ð¢NT - TIER BLACK", 1000);
+      defaultPrices.put("TNT - TIER WHITE", 1000);
+      defaultPrices.put("Ð¢Ð¾Ñ‚ÐµÐ¼ Ð±ÐµÑÑÐ¼ÐµÑ€Ñ‚Ð¸Ñ", 1000);
+      defaultPrices.put("Ð¢Ñ€Ð°Ð¿ÐºÐ°", 1000);
+      defaultPrices.put("Ð¢Ñ€ÐµÐ·ÑƒÐ±ÐµÑ†", 1000);
+      defaultPrices.put("Ð¢Ñ€ÐµÐ·ÑƒÐ±ÐµÑ† ÐºÑ€ÑƒÑˆÐ¸Ñ‚ÐµÐ»Ñ", 500000);
+      defaultPrices.put("Ð¤ÐµÐ¹ÐµÑ€Ð²ÐµÑ€Ðº", 5000);
+      defaultPrices.put("Ð¨Ð°Ð»ÐºÐµÑ€Ð¾Ð²Ñ‹Ð¹ ÑÑ‰Ð¸Ðº", 1000);
+      defaultPrices.put("Ð¨Ð»ÐµÐ¼ ÐºÑ€ÑƒÑˆÐ¸Ñ‚ÐµÐ»Ñ", 500000);
+      defaultPrices.put("Ð­Ð»Ð¸Ñ‚Ñ€Ñ‹", 100000);
+      defaultPrices.put("Ð­Ð½Ð´ÐµÑ€ Ð¶ÐµÐ¼Ñ‡ÑƒÐ³", 1000);
+      defaultPrices.put("Ð¯Ð±Ð»Ð¾ÐºÐ¾", 1000);
+      defaultPrices.put("Ð¯Ð²Ð½Ð°Ñ Ð¿Ñ‹Ð»ÑŒ", 1000);
+      defaultPrices.put("Ð¯Ð¹Ñ†Ð¾ Ð²Ð¸Ñ…Ñ€Ñ", 200000);
+      defaultPrices.put("Ð¯Ð¹Ñ†Ð¾ Ð·Ð¾Ð¼Ð±Ð¸-Ð¶Ð¸Ñ‚ÐµÐ»Ñ", 100000);
+      defaultPrices.put("Ð¯Ð¹Ñ†Ð¾ Ð¶Ð¸Ñ‚ÐµÐ»Ñ", 200000);
+      defaultPrices.put("Ð—Ð»Ð¾Ð²ÐµÑ‰Ð¸Ð¹ ÐºÐ»ÑŽÑ‡ Ð¸ÑÐ¿Ñ‹Ñ‚Ð°Ð½Ð¸Ð¹", 1000);
+      defaultPrices.put("ÐŸÑ€Ð¾Ð³Ñ€ÑƒÐ·Ñ‡Ð¸Ðº Ñ‡Ð°Ð½ÐºÐ¾Ð² [1x1]", 1000);
+      defaultPrices.put("ÐŸÑ€Ð¾Ð³Ñ€ÑƒÐ·Ñ‡Ð¸Ðº Ñ‡Ð°Ð½ÐºÐ¾Ð² [3x3]", 1000);
+      defaultPrices.put("ÐŸÑ€Ð¾Ð³Ñ€ÑƒÐ·Ñ‡Ð¸Ðº Ñ‡Ð°Ð½ÐºÐ¾Ð² [5x5]", 1000);
+      defaultPrices.put("ÐÑ€Ð±Ð°Ð»ÐµÑ‚ ÐºÑ€ÑƒÑˆÐ¸Ñ‚ÐµÐ»Ñ", 500000);
+      defaultPrices.put("Ð¢Ð¾Ñ€Ñ‚", 10000);
+      defaultPrices.put("Ð”ÑŒÑÐ²Ð¾Ð»ÑŒÑÐºÐ°Ñ ÑÑ‚Ñ€ÐµÐ»Ð°", 1790);
+      defaultPrices.put("Ð¢Ð¾Ñ‡ÐµÐ½Ð°Ñ ÑÑ‚Ñ€ÐµÐ»Ð°", 1790);
+      defaultPrices.put("Ð¡Ñ‚Ñ€ÐµÐ»Ð° Ð¿Ð°Ñ€Ð°Ð½Ð¾Ð¹Ð¸", 1790);
+      defaultPrices.put("Ð›ÐµÐ´ÑÐ½Ð°Ñ ÑÑ‚Ñ€ÐµÐ»Ð°", 1790);
+      defaultPrices.put("Ð¯Ð´Ð¾Ð²Ð¸Ñ‚Ð°Ñ ÑÑ‚Ñ€ÐµÐ»Ð°", 1790);
+      defaultPrices.put("ÐŸÑ€Ð¾ÐºÐ»ÑÑ‚Ð°Ñ ÑÑ‚Ñ€ÐµÐ»Ð°", 1790);
+      defaultPrices.put("Ð—Ð°Ñ€ÑÐ´ Ð²ÐµÑ‚Ñ€Ð°", 1790);
+      defaultPrices.put("Ð¡Ñ‚ÐµÑ€Ð¶ÐµÐ½ÑŒ Ð²Ð¸Ñ…Ñ€Ñ", 1790);
+      defaultPrices.put("ÐšÐ°Ñ€Ð°Ð¼ÐµÐ»ÑŒÐ½Ð¾Ðµ ÑÐ±Ð»Ð¾ÐºÐ¾", 10000);
+   }
+}
+

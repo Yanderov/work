@@ -34,8 +34,6 @@ public class WatermarkElement extends HudElement implements IUtil {
    public void render(DrawContext drawContext) {
       String clientName = "YanderovClient";
       String fps = MinecraftClient.getInstance().getCurrentFps() + "fps";
-      String time = "15:00";
-      String uid = "1488";
       
       // BPS Calculation & Smoothing
       double deltaX = mc.player.getX() - mc.player.prevX;
@@ -49,11 +47,9 @@ public class WatermarkElement extends HudElement implements IUtil {
       String bps = String.format("%.2f bps", smoothedBps);
 
       float size = 7.5F;
-      float width = 145.25F + FontManager.SUISSEINTMEDIUM.get().getWidth(fps, size) 
-                             + FontManager.SUISSEINTMEDIUM.get().getWidth(clientName, size) 
-                             + FontManager.SUISSEINTMEDIUM.get().getWidth(time, size) 
-                             + FontManager.SUISSEINTMEDIUM.get().getWidth(uid, size)
-                             + FontManager.SUISSEINTMEDIUM.get().getWidth(bps, size);
+      float width = 95.0F + FontManager.SUISSEINTMEDIUM.get().getWidth(fps, size) 
+                          + FontManager.SUISSEINTMEDIUM.get().getWidth(clientName, size) 
+                          + FontManager.SUISSEINTMEDIUM.get().getWidth(bps, size);
                              
       this.draggable.setHeight(26);
       this.draggable.setWeight((int)width);
@@ -86,26 +82,12 @@ public class WatermarkElement extends HudElement implements IUtil {
       themeText = (BuiltText)Builder.text().font(FontManager.SUISSEINTMEDIUM.get()).text(fps).color(Color.WHITE).size(7.5F).thickness(0.05F).build();
       themeText.render(matrix, (float)(this.draggable.x + 32) + widthName, (float)(this.draggable.y + 8));
 
-      // BPS Section
-      float widthBps = FontManager.SUISSEINTMEDIUM.get().getWidth(bps, size) + 23.5F;
-      rectangle = Builder.rectangle().size(new SizeState(widthBps, 18.0F)).color(new QuadColorState(new Color(255, 255, 255, 20))).radius(new QuadRadiusState(3.0F)).smoothness(1.15F).build();
+      // BPS Section (last element with rounded corners)
+      float widthBps = FontManager.SUISSEINTMEDIUM.get().getWidth(bps, size) + 24.5F;
+      rectangle = Builder.rectangle().size(new SizeState(widthBps, 18.0F)).color(new QuadColorState(new Color(255, 255, 255, 20))).radius(new QuadRadiusState(3.0F, 3.0F, 5.0F, 5.0F)).smoothness(1.15F).build();
       rectangle.render(matrix, (float)(this.draggable.x + 29) + widthName + widthFps, (float)(this.draggable.y + 4));
 
       themeText = (BuiltText)Builder.text().font(FontManager.SUISSEINTMEDIUM.get()).text(bps).color(Color.WHITE).size(7.5F).thickness(0.05F).build();
       themeText.render(matrix, (float)(this.draggable.x + 34) + widthName + widthFps, (float)(this.draggable.y + 8));
-      
-      float widthTime = FontManager.SUISSEINTMEDIUM.get().getWidth(time, size) + 23.5F;
-      rectangle = Builder.rectangle().size(new SizeState(widthTime, 18.0F)).color(new QuadColorState(new Color(255, 255, 255, 20))).radius(new QuadRadiusState(3.0F)).smoothness(1.15F).build();
-      rectangle.render(matrix, (float)(this.draggable.x + 31) + widthName + widthFps + widthBps, (float)(this.draggable.y + 4));
-      
-      themeText = (BuiltText)Builder.text().font(FontManager.SUISSEINTMEDIUM.get()).text(time).color(Color.WHITE).size(7.5F).thickness(0.05F).build();
-      themeText.render(matrix, (float)(this.draggable.x + 36) + widthName + widthFps + widthBps, (float)(this.draggable.y + 8));
-      
-      float widthUid = FontManager.SUISSEINTMEDIUM.get().getWidth(uid, size) + 24.5F;
-      rectangle = Builder.rectangle().size(new SizeState(widthUid, 18.0F)).color(new QuadColorState(new Color(255, 255, 255, 20))).radius(new QuadRadiusState(3.0F, 3.0F, 5.0F, 5.0F)).smoothness(1.15F).build();
-      rectangle.render(matrix, (float)(this.draggable.x + 33) + widthName + widthFps + widthBps + widthTime, (float)(this.draggable.y + 4));
-      
-      themeText = (BuiltText)Builder.text().font(FontManager.SUISSEINTMEDIUM.get()).text(uid).color(Color.WHITE).size(7.5F).thickness(0.05F).build();
-      themeText.render(matrix, (float)(this.draggable.x + 38) + widthName + widthFps + widthBps + widthTime, (float)(this.draggable.y + 8));
    }
 }

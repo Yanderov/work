@@ -1,0 +1,29 @@
+﻿package fun.Yanderov.events.render;
+
+import fun.Yanderov.utils.client.managers.event.events.Event;
+
+public class TextFactoryEvent implements Event {
+   private String text;
+
+   public void replaceText(String protect, String replaced) {
+      if (this.text != null && !this.text.isEmpty()) {
+         if (this.text.contains(protect) && (this.text.equalsIgnoreCase(protect) || this.text.contains(protect + " ") || this.text.contains(" " + protect) || this.text.contains("â" + protect) || this.text.contains(protect + "Â§"))) {
+            this.text = this.text.replace(protect, replaced);
+         }
+
+      }
+   }
+
+   public void setText(String text) {
+      this.text = text;
+   }
+
+   public String getText() {
+      return this.text;
+   }
+
+   public TextFactoryEvent(String text) {
+      this.text = text;
+   }
+}
+

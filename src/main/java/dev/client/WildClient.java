@@ -17,6 +17,7 @@ import dev.client.ui.mainmenu.MainScreen;
 import dev.client.util.math.TimerUtil;
 import dev.client.util.other.NameGen;
 import dev.client.util.render.GradientText;
+import dev.client.integration.YanderovAdapter;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -48,6 +49,9 @@ public class WildClient implements ClientModInitializer {
    private NameGen nameGen;
    private float bodyPitch = 10.0F;
    private float timerValue;
+   
+   // Yanderov Integration через адаптер
+   private YanderovAdapter yanderovAdapter;
 
    public void onInitializeClient() {
       INSTANCE = this;
@@ -70,6 +74,11 @@ public class WildClient implements ClientModInitializer {
       this.gui = new Gui();
       this.timerUtil = new TimerUtil();
       this.configManager = new ConfigManager(this.moduleManager, this.draggableManager, this.themeManager);
+      
+      // Инициализация Yanderov через адаптер
+      this.yanderovAdapter = YanderovAdapter.getInstance();
+      this.yanderovAdapter.initialize();
+      
       HudRenderCallback.EVENT.register(this::render2D);
       ClientLifecycleEvents.CLIENT_STOPPING.register((client) -> {
          INSTANCE.getConfigManager().saveConfig("default");
@@ -166,5 +175,10 @@ public class WildClient implements ClientModInitializer {
 
    public void setTimerValue(float timerValue) {
       this.timerValue = timerValue;
+   }
+   
+   // Yanderov Adapter Getter
+   public YanderovAdapter getYanderovAdapter() {
+      return this.yanderovAdapter;
    }
 }
