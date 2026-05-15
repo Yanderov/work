@@ -21,10 +21,16 @@ public class AntiTarget extends Module implements ITickable, IUtil {
             return AntiTarget.this.mode.is("Normal");
         }
     }.name("Pitch").value(35.0F).minValue(30.0F).maxValue(50.0F).incriment(1.0F);
+    private final FloatSetting speed = new FloatSetting() {
+        @Override
+        public boolean isVisible() {
+            return AntiTarget.this.mode.is("Normal");
+        }
+    }.name("Speed").value(1.95F).minValue(1.9F).maxValue(2.7F).incriment(0.01F);
 
     public AntiTarget() {
         super(new ModuleBranding("AntiTarget", Category.MOVEMENT, "Не даёт вас затаргетить на элитрах"));
-        this.addSetting(this.mode, this.pitch);
+        this.addSetting(this.mode, this.pitch, this.speed);
     }
 
     @Override
@@ -37,7 +43,7 @@ public class AntiTarget extends Module implements ITickable, IUtil {
             return;
         }
 
-        if (mc.player.isGliding()) { // check for elytra flying using isGliding
+        if (mc.player.isGliding()) { 
             if (this.mode.is("Normal")) {
                 float targetPitch = -this.pitch.getValue();
                 mc.player.setPitch(targetPitch);
