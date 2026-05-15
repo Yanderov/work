@@ -218,8 +218,9 @@ public class TargetHudElement extends HudElement {
       String name = this.lastTarget.getName();
       if (this.nameProtect == null) this.nameProtect = (NameProtect)WildClient.INSTANCE.getModuleManager().getByClass(NameProtect.class);
       name = this.nameProtect.replace(name);
-      float nameWidth = FontManager.SUISSEINTMEDIUM.get().getWidth(name, 6.0F);
-      Builder.text().font(FontManager.SUISSEINTMEDIUM.get()).text(name).color(Color.WHITE).size(6.0F).thickness(0.05F).build().render(matrix, x + width / 2.0F - nameWidth / 2.0F, y + headerPaddingTop + 4.7F);
+      float nameSize = 7.0F;
+      float nameWidth = FontManager.SUISSEINTMEDIUM.get().getWidth(name, nameSize);
+      Builder.text().font(FontManager.SUISSEINTMEDIUM.get()).text(name).color(Color.WHITE).size(nameSize).thickness(0.05F).build().render(matrix, x + width / 2.0F - nameWidth / 2.0F, y + headerPaddingTop + 3.0F);
       
       // Face
       AbstractTexture abstractTexture = MinecraftClient.getInstance().getTextureManager().getTexture(this.lastTarget.getAvatar());
@@ -230,8 +231,11 @@ public class TargetHudElement extends HudElement {
       
       // Items
       if (this.lastTarget.getEntity() instanceof PlayerEntity player) {
-          this.renderYanderovItems(drawContext, (int)x + 5, (int)(y + 19), player, true);
-          this.renderYanderovItems(drawContext, (int)(x + width - 30), (int)(y + 19), player, false);
+          this.renderYanderovItems(drawContext, (int)x + 7, (int)(y + 21), player, true);
+          this.renderYanderovItems(drawContext, (int)(x + width - 32), (int)(y + 21), player, false);
+      } else {
+          this.renderYanderovItems(drawContext, (int)x + 7, (int)(y + 21), null, true);
+          this.renderYanderovItems(drawContext, (int)(x + width - 32), (int)(y + 21), null, false);
       }
       
       // Bottom Section (Health bar)
@@ -241,8 +245,9 @@ public class TargetHudElement extends HudElement {
       float barHeight = 4.0F;
       float barX = x + 5.0F;
       float barY = y + 55;
-      float targetHealth = hp / maxHp * barWidth;
-      this.health = MathUtil.fast(this.health, targetHealth, 5.0F);
+      float healthPercentage = hp / maxHp;
+      float targetHealthWidth = Math.max(0, Math.min(1.0F, healthPercentage)) * barWidth;
+      this.health = MathUtil.fast(this.health, targetHealthWidth, 5.0F);
       
       Builder.rectangle().size(new SizeState(barWidth, barHeight)).color(new QuadColorState(new Color(50, 50, 50, 150))).radius(new QuadRadiusState(1.0F)).build().render(matrix, barX, barY);
       Builder.rectangle().size(new SizeState(Math.max(0, this.health), barHeight)).color(new QuadColorState(Color.WHITE)).radius(new QuadRadiusState(1.0F)).build().render(matrix, barX, barY);
@@ -264,29 +269,34 @@ public class TargetHudElement extends HudElement {
    private void renderYanderovItems(DrawContext drawContext, int x, int y, PlayerEntity player, boolean armor) {
        MatrixStack matrices = drawContext.getMatrices();
        ArrayList<ItemStack> items = new ArrayList<>();
-       if (armor) {
-           player.getArmorItems().forEach(items::add);
-           Collections.reverse(items);
-       } else {
-           items.add(player.getMainHandStack());
-           items.add(player.getOffHandStack());
+       int maxItems = armor ? 4 : 2;
+       
+       if (player != null) {
+           if (armor) {
+               player.getArmorItems().forEach(items::add);
+               Collections.reverse(items);
+           } else {
+               items.add(player.getMainHandStack());
+               items.add(player.getOffHandStack());
+           }
        }
 
-       int i = 0;
-       for (ItemStack item : items) {
-           if (item.getItem() != Items.AIR) {
-               float itemX = x + (i % 2) * 13;
-               float itemY = y + (i / 2) * 13;
-               
-               Builder.rectangle().size(new SizeState(12.0F, 12.0F)).color(new QuadColorState(new Color(0, 0, 0, 100))).radius(new QuadRadiusState(1.5F)).build().render(matrices.peek().getPositionMatrix(), itemX, itemY);
-               
-               matrices.push();
-               matrices.translate(itemX, itemY, 0);
-               matrices.scale(0.65f, 0.65f, 0.65f);
-               ItemRenderUtil.drawItemAlpha(matrices, item, 0, 0, (float)this.animation.getOutput());
-               matrices.pop();
+       for (int i = 0; i < maxItems; i++) {
+           float itemX = x + (i % 2) * 13;
+           float itemY = y + (i / 2) * 13;
+           
+           Builder.rectangle().size(new SizeState(12.0F, 12.0F)).color(new QuadColorState(new Color(0, 0, 0, 100))).radius(new QuadRadiusState(1.5F)).build().render(matrices.peek().getPositionMatrix(), itemX, itemY);
+           
+           if (player != null && i < items.size()) {
+               ItemStack item = items.get(i);
+               if (item != null && item.getItem() != Items.AIR) {
+                   matrices.push();
+                   matrices.translate(itemX, itemY, 0);
+                   matrices.scale(0.65f, 0.65f, 0.65f);
+                   ItemRenderUtil.drawItemAlpha(matrices, item, 0, 0, (float)this.animation.getOutput());
+                   matrices.pop();
+               }
            }
-           i++;
        }
    }
 
