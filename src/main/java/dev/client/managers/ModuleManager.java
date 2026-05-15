@@ -118,6 +118,7 @@ public class ModuleManager {
           new LockSlot(),
           new NoEntityTrace(),
           new NoItemBreak(),
+          new NoServerRot(),
           new OpenWall(),
           new PearlBlockThrow(),
           new ReallyWorldHelper(),
