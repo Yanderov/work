@@ -72,9 +72,15 @@ import org.joml.Vector2f;
 
 @Environment(EnvType.CLIENT)
 public class Aura extends Module implements ITickable, IRenderable3D, IUtil, ITravelable, IFireworkable, IInputable, ISendPacketable, IEnableable, IRotateable, IMoveCorrectionable, IRenderable2D, IDisableable {
-   private final ModeSetting mode = new ModeSetting().name("Mode").value("ReallyWorld").modes("ReallyWorld", "Normal", "1.8.9", "Aggressive", "Matrix", "SpookyTime", "HolyWorld", "Smooth");
+   private final ModeSetting mode = new ModeSetting().name("Mode").value("ReallyWorld").modes("ReallyWorld", "Normal", "1.8.9", "Aggressive", "Matrix", "SpookyTime", "HolyWorld", "Smooth", "Grim", "Snap", "Sloth", "FunTime");
    private final FloatSetting preaim = new FloatSetting().name("PreAim").value(0.5F).minValue(0.0F).maxValue(2.0F).incriment(0.1F);
    private final FloatSetting distance = new FloatSetting().name("Distance").value(3.0F).minValue(3.0F).maxValue(6.0F).incriment(0.1F);
+   
+   // Sloth variables
+   private Vector2f visualRotate = new Vector2f(0.0f, 0.0f);
+   private float oscillatorTime = 0.0f;
+   private float ticksUntilNextAttack = 0.0f;
+   
    private final BooleanSetting alwayse = new BooleanSetting() {
       public boolean isVisible() {
          return Aura.this.mode.is("Aggressive");
@@ -206,6 +212,11 @@ public class Aura extends Module implements ITickable, IRenderable3D, IUtil, ITr
       if (this.target == null || !this.isValid(this.target) || !this.options.getValueByName("SaveTarget")) {
          this.updateTarget();
       }
+      
+      // Update visual rotation for Sloth/HolyWorld
+      if (this.target != null && (this.mode.is("Sloth") || this.mode.is("HolyWorld"))) {
+          this.updateVisualRotation();
+      }
 
       if (mc.player.isGliding() && this.target != null && this.options.getValueByName("ElytraTarget") && this.fireWork.isReached((long)this.fireworkCooldown.getValue()) && this.autoFireWork.getValue()) {
          InventoryUtil.sendFireWork(this.rotate.x, this.rotate.y);
@@ -235,16 +246,19 @@ public class Aura extends Module implements ITickable, IRenderable3D, IUtil, ITr
                 } else if (this.target != null) {
                     mc.player.swingHand(Hand.MAIN_HAND);
                 }
+            } else if (this.mode.is("Snap")) {
+                if (this.isWithinFOV(90.0f)) {
+                    this.attack();
+                }
             } else {
                 this.attack();
             }
          }
       } else {
          if (this.mode.is("Aggressive") && this.alwayse.getValue()) {
-             // Keep rotations even without target? No, standard behavior is usually reset.
-             // Sirius Aggressive resets if target is null, but maybe constant aim means something else.
          }
          this.rotate = new Vector2f(mc.player.getYaw(), mc.player.getPitch());
+         this.oscillatorTime = 0.0f;
       }
 
       if (this.options.getValueByName("CameraTarget") && mc.targetedEntity != null && this.target != mc.targetedEntity) {
@@ -255,7 +269,53 @@ public class Aura extends Module implements ITickable, IRenderable3D, IUtil, ITr
             }
          }
       }
+   }
 
+   private void updateVisualRotation() {
+       if (this.target == null) {
+           this.visualRotate = new Vector2f(mc.player.getYaw(), mc.player.getPitch());
+           return;
+       }
+       Vec3d targetPos = this.target.getPos().add(0.0D, this.target.getHeight() / 2.0D, 0.0D);
+       Vec3d playerPos = mc.player.getEyePos();
+       Vec3d diff = targetPos.subtract(playerPos);
+       float targetYaw = (float) Math.toDegrees(Math.atan2(diff.z, diff.x)) - 90.0f;
+       float targetPitch = (float) (-Math.toDegrees(Math.atan2(diff.y, Math.hypot(diff.x, diff.z))));
+       
+       float lerpFactor = 0.27f;
+       this.oscillatorTime += 0.05f;
+       float circlePhase = this.oscillatorTime * 2.0f;
+       
+       float yawAmp = this.mode.is("Sloth") ? 6.0f : 2.0f;
+       float pitchAmp = this.mode.is("Sloth") ? 1.9f : 2.0f;
+       
+       float yawOsc = (float) (yawAmp * Math.sin(circlePhase));
+       float pitchOsc = (float) (pitchAmp * Math.cos(circlePhase));
+       
+       targetYaw += yawOsc;
+       targetPitch += pitchOsc;
+       
+       float yawDiff = MathHelper.wrapDegrees(targetYaw - this.visualRotate.x);
+       float pitchDiff = targetPitch - this.visualRotate.y;
+       
+       float newYaw = this.visualRotate.x + yawDiff * lerpFactor;
+       float newPitch = MathHelper.clamp(this.visualRotate.y + pitchDiff * lerpFactor, -89.0f, 89.0f);
+       this.visualRotate = new Vector2f(newYaw, newPitch);
+   }
+
+   private boolean isWithinFOV(float fov) {
+       if (this.target == null) return false;
+       Vec3d targetDir = this.target.getPos().add(0.0D, this.target.getHeight() / 2.0D, 0.0D).subtract(mc.player.getEyePos()).normalize();
+       float[] rot = this.getRotationsToVec(targetDir);
+       float yawDiff = Math.abs(MathHelper.wrapDegrees(rot[0] - mc.player.getYaw()));
+       float pitchDiff = Math.abs(rot[1] - mc.player.getPitch());
+       return Math.sqrt(yawDiff * yawDiff + pitchDiff * pitchDiff) <= (double) (fov / 2.0f);
+   }
+
+   private float[] getRotationsToVec(Vec3d vec) {
+       float yaw = (float) (Math.toDegrees(Math.atan2(vec.z, vec.x)) - 90.0f);
+       float pitch = (float) (-Math.toDegrees(Math.atan2(vec.y, Math.hypot(vec.x, vec.z))));
+       return new float[]{yaw, pitch};
    }
 
    private boolean isUseItems() {
@@ -382,7 +442,7 @@ public class Aura extends Module implements ITickable, IRenderable3D, IUtil, ITr
          this.lastYaw = clampedYaw;
       } else {
           switch (this.mode.getValue()) {
-            case "ReallyWorld" -> {
+            case "ReallyWorld", "Grim" -> {
                Vec3d targetTorso = this.target.getPos().add(0.0D, (this.target.getHeight() / 2.0F), 0.0D);
                Vec3d eyePos = mc.player.getEyePos();
                Vec3d vec = targetTorso.subtract(eyePos);
@@ -398,6 +458,49 @@ public class Aura extends Module implements ITickable, IRenderable3D, IUtil, ITr
                yaw -= (yaw - this.rotate.x) % gcd2;
                pitch -= (pitch - this.rotate.y) % gcd2;
                this.rotate = new Vector2f(yaw, pitch);
+            }
+            case "Snap" -> {
+                if (this.isWithinFOV(90.0f)) {
+                    Vec3d targetTorso = this.target.getPos().add(0.0D, (this.target.getHeight() / 2.0F), 0.0D);
+                    Vec3d eyePos = mc.player.getEyePos();
+                    Vec3d vec = targetTorso.subtract(eyePos);
+                    float yaw = (float)MathHelper.wrapDegrees(Math.toDegrees(Math.atan2(vec.z, vec.x)) - 90.0D);
+                    float pitch = (float)(-Math.toDegrees(Math.atan2(vec.y, Math.hypot(vec.x, vec.z))));
+                    float gcd = Gcd.getGCD();
+                    yaw -= (yaw - this.rotate.x) % gcd;
+                    pitch -= (pitch - this.rotate.y) % gcd;
+                    this.rotate = new Vector2f(yaw, pitch);
+                } else {
+                    this.rotate = new Vector2f(mc.player.getYaw(), mc.player.getPitch());
+                }
+            }
+            case "Sloth" -> {
+                Vec3d futurePos = this.target.getPos().add(0.0, this.target.getHeight() / 2.0, 0.0);
+                Vec3d eyePos = mc.player.getEyePos();
+                Vec3d direction = futurePos.subtract(eyePos);
+                float yaw = (float) Math.toDegrees(Math.atan2(direction.z, direction.x)) - 90.0f;
+                float pitch = (float) (-Math.toDegrees(Math.atan2(direction.y, Math.hypot(direction.x, direction.z))));
+                float time = (float) (System.currentTimeMillis() % 4000L) / 4000.0f * 360.0f;
+                yaw += (float) Math.sin(time * 0.02f) * 1.5f;
+                pitch += (float) Math.cos(time * 0.018f) * 1.3f;
+                pitch = MathHelper.clamp(pitch, -89.9f, 89.9f);
+                float gcd = Gcd.getGCD();
+                yaw -= (yaw - this.rotate.x) % gcd;
+                pitch -= (pitch - this.rotate.y) % gcd;
+                this.rotate = new Vector2f(yaw, pitch);
+            }
+            case "FunTime" -> {
+                Vec3d targetTorso = this.target.getPos().add(0.0D, (this.target.getHeight() / 2.0F), 0.0D);
+                Vec3d eyePos = mc.player.getEyePos();
+                Vec3d vec = targetTorso.subtract(eyePos);
+                float yaw = (float)MathHelper.wrapDegrees(Math.toDegrees(Math.atan2(vec.z, vec.x)) - 90.0D);
+                float pitch = (float)(-Math.toDegrees(Math.atan2(vec.y, Math.hypot(vec.x, vec.z))));
+                yaw += ThreadLocalRandom.current().nextFloat(-3.0f, 3.0f);
+                pitch += ThreadLocalRandom.current().nextFloat(-3.0f, 3.0f);
+                float gcd = Gcd.getGCD();
+                yaw -= (yaw - this.rotate.x) % gcd;
+                pitch -= (pitch - this.rotate.y) % gcd;
+                this.rotate = new Vector2f(yaw, pitch);
             }
             case "Matrix" -> {
                // Плавная ротация с рандомизацией для Matrix
@@ -638,11 +741,22 @@ public class Aura extends Module implements ITickable, IRenderable3D, IUtil, ITr
    }
 
    public void onRotate(RotationEvent rotationEvent) {
-      mc.player.bodyYaw = this.rotate.x;
-      mc.player.headYaw = this.rotate.x;
-      WildClient.INSTANCE.setBodyPitch(this.rotate.y);
-      rotationEvent.setYaw(this.rotate.x);
-      rotationEvent.setPitch(this.rotate.y);
+      float yaw = this.rotate.x;
+      float pitch = this.rotate.y;
+      
+      if (this.target != null && (this.mode.is("Sloth") || this.mode.is("HolyWorld"))) {
+          mc.player.bodyYaw = this.visualRotate.x;
+          mc.player.headYaw = this.visualRotate.x;
+          WildClient.INSTANCE.setBodyPitch(this.visualRotate.y);
+          rotationEvent.setYaw(yaw);
+          rotationEvent.setPitch(pitch);
+      } else {
+          mc.player.bodyYaw = yaw;
+          mc.player.headYaw = yaw;
+          WildClient.INSTANCE.setBodyPitch(pitch);
+          rotationEvent.setYaw(yaw);
+          rotationEvent.setPitch(pitch);
+      }
    }
 
    public void moveCorrection(MoveCorrectionEvent event) {
